@@ -20,9 +20,6 @@ public class UserInfoFrame extends JFrame {
     private JPanel contentPane;
     private Person user;
 
-    /**
-     * Create the frame.
-     */
     public UserInfoFrame(Person user) {
         this.user = user;
         
@@ -35,13 +32,11 @@ public class UserInfoFrame extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
-        // Titre
         JLabel lblTitle = new JLabel("Mes Informations");
         lblTitle.setFont(new Font("Tahoma", Font.BOLD, 20));
         lblTitle.setBounds(30, 20, 300, 30);
         contentPane.add(lblTitle);
         
-        // Déterminer le rôle
         String role = getRoleLabel();
         JLabel lblRole = new JLabel("Rôle: " + role);
         lblRole.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -49,14 +44,12 @@ public class UserInfoFrame extends JFrame {
         lblRole.setBounds(30, 120, 300, 25);
         contentPane.add(lblRole);
         
-        // Ligne de séparation
-        JLabel lblSeparator1 = new JLabel("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        JLabel lblSeparator1 = new JLabel("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"); //TODO changer en separator
         lblSeparator1.setFont(new Font("Dialog", Font.PLAIN, 12));
         lblSeparator1.setForeground(Color.LIGHT_GRAY);
         lblSeparator1.setBounds(30, 90, 420, 20);
         contentPane.add(lblSeparator1);
         
-        // Informations de base
         JLabel lblBasicInfo = new JLabel("Informations personnelles");
         lblBasicInfo.setFont(new Font("Tahoma", Font.BOLD, 14));
         lblBasicInfo.setBounds(30, 60, 250, 25);
@@ -78,14 +71,12 @@ public class UserInfoFrame extends JFrame {
         lblTel.setBounds(50, 230, 400, 20);
         contentPane.add(lblTel);
         
-        // Ligne de séparation
-        JLabel lblSeparator2 = new JLabel("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        JLabel lblSeparator2 = new JLabel("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"); //TODO changer en separator
         lblSeparator2.setFont(new Font("Dialog", Font.PLAIN, 12));
         lblSeparator2.setForeground(Color.LIGHT_GRAY);
         lblSeparator2.setBounds(30, 260, 420, 20);
         contentPane.add(lblSeparator2);
         
-        // Informations spécifiques au rôle
         int yPosition = 290;
         
         if (user instanceof Member) {
@@ -119,21 +110,8 @@ public class UserInfoFrame extends JFrame {
             lblCategory.setBounds(50, yPosition, 400, 25);
             contentPane.add(lblCategory);
             
-        } else if (user instanceof Treasurer) {
-            JLabel lblSpecificInfo = new JLabel("Informations Trésorier");
-            lblSpecificInfo.setFont(new Font("Tahoma", Font.BOLD, 14));
-            lblSpecificInfo.setBounds(30, yPosition, 250, 25);
-            contentPane.add(lblSpecificInfo);
-            yPosition += 35;
-            
-            JLabel lblTreasurerNote = new JLabel("Accès complet aux fonctionnalités financières");
-            lblTreasurerNote.setFont(new Font("Tahoma", Font.ITALIC, 11));
-            lblTreasurerNote.setForeground(Color.GRAY);
-            lblTreasurerNote.setBounds(50, yPosition, 400, 25);
-            contentPane.add(lblTreasurerNote);
         }
         
-        // Bouton Fermer
         JButton btnClose = new JButton("Fermer");
         btnClose.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -146,31 +124,17 @@ public class UserInfoFrame extends JFrame {
         setLocationRelativeTo(null);
     }
     
-    /**
-     * Retourne le libellé du rôle
-     */
     private String getRoleLabel() {
-        if (user instanceof Treasurer) {
-            return "Trésorier";
-        } else if (user instanceof Manager) {
-            return "Manager";
-        } else if (user instanceof Member) {
-            return "Membre";
-        }
-        return "Inconnu";
+        if (user instanceof Treasurer) return "Trésorier";
+         else if (user instanceof Manager) return "Manager";
+         else if (user instanceof Member) return "Membre";
+         else return "Inconnu";
     }
     
-    /**
-     * Retourne la couleur associée au rôle
-     */
     private Color getRoleColor() {
-        if (user instanceof Treasurer) {
-            return new Color(46, 139, 87);
-        } else if (user instanceof Manager) {
-            return new Color(255, 140, 0);
-        } else if (user instanceof Member) {
-            return new Color(70, 130, 180);
-        }
-        return Color.BLACK;
+        if (user instanceof Treasurer) return new Color(46, 139, 87);
+        else if (user instanceof Manager) return new Color(255, 140, 0);
+        else if (user instanceof Member) return new Color(70, 130, 180);
+        else return Color.BLACK;
     }
 }

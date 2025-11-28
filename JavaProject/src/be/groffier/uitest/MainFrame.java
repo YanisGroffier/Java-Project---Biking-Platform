@@ -23,27 +23,21 @@ public class MainFrame {
     }
     
     private void showDashboard() {
-        if (currentUser instanceof Treasurer) {
-            currentDashboard = new TreasurerDashboard(this, (Treasurer) currentUser);
-        } else if (currentUser instanceof Manager) {
-            currentDashboard = new ManagerDashboard(this, (Manager) currentUser);
-        } else if (currentUser instanceof Member) {
-            currentDashboard = new MemberDashboard(this, (Member) currentUser);
-        } else {
+        if (currentUser instanceof Treasurer) currentDashboard = new TreasurerDashboard(this, (Treasurer) currentUser);
+        else if (currentUser instanceof Manager) currentDashboard = new ManagerDashboard(this, (Manager) currentUser);
+        else if (currentUser instanceof Member) currentDashboard = new MemberDashboard(this, (Member) currentUser);
+        else {
             System.err.println("Erreur à l'authentification du type d'utilisateur.");
             return;
         }
-        
         currentDashboard.setVisible(true);
     }
     
-
-    public void onLoginSuccess(Person person) {
+    public void onLogin(Person person) {
         this.isLoggedIn = true;
         this.currentUser = person;
         showDashboard();
     }
-    
 
     public void onLogout() {
         this.isLoggedIn = false;
@@ -55,7 +49,7 @@ public class MainFrame {
         return currentUser;
     }
     
-    public boolean isLoggedIn() {
+    public boolean getIsLoggedIn() {
         return isLoggedIn;
     }
     

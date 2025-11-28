@@ -16,8 +16,8 @@ import be.groffier.dao.PersonDAO;
 
 public class LoginFrame extends JFrame {
 
-    private static final long serialVersionUID = 1L;
-    private JPanel contentPane;
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
     private JTextField txtName;
     private JPasswordField txtPassword;
     private MainFrame mainFrame;
@@ -73,28 +73,29 @@ public class LoginFrame extends JFrame {
         String name = txtName.getText();
         String password = new String(txtPassword.getPassword());
         
-        if (name.trim().isEmpty() || password.trim().isEmpty()) {
+        if (name.trim().isEmpty() || name.isBlank() || 
+        	password.isEmpty() || password.isBlank()) {
             JOptionPane.showMessageDialog(this, 
-                "Veuillez remplir tous les champs!", 
+                "Veuillez remplir tous les champs.", 
                 "Erreur", 
                 JOptionPane.WARNING_MESSAGE);
             return;
         }
         
-        Person person = personDAO.authenticate(name, password);
+        Person person = personDAO.authenticate(name, password); //TODO changer en password.hashCode();
         
         if (person != null) {
             JOptionPane.showMessageDialog(this, 
-                "Connexion réussie! Bienvenue " + person.getFirstname() + "!", 
+                "Connexion réussie! Bienvenue " + person.getFirstname() + " " + person.getName() + ".", 
                 "Succès", 
                 JOptionPane.INFORMATION_MESSAGE);
             
-            mainFrame.onLoginSuccess(person);
+            mainFrame.onLogin(person);
             this.dispose();
             
         } else {
             JOptionPane.showMessageDialog(this, 
-                "Nom ou mot de passe incorrect!", 
+                "Nom ou mot de passe incorrect.", 
                 "Erreur", 
                 JOptionPane.ERROR_MESSAGE);
             txtPassword.setText("");

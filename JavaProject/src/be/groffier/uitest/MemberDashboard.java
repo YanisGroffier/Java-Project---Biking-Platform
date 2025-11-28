@@ -20,13 +20,13 @@ public class MemberDashboard extends JFrame {
     private JPanel contentPane;
     private MainFrame mainFrame;
     private Member member;
-    private JLabel lblBalance; // Référence pour mettre à jour l'affichage
+    private JLabel lblBalance;
 
     public MemberDashboard(MainFrame mainFrame, Member member) {
         this.mainFrame = mainFrame;
         this.member = member;
         
-        setTitle("Dashboard Membre");
+        setTitle("Bienvenue");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 920, 680);
         contentPane = new JPanel();
@@ -35,8 +35,7 @@ public class MemberDashboard extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
-        // Header - Bouton informations avec avatar (haut gauche)
-        JButton btnViewInfo = new JButton("ℹ " + member.getFirstname() + " " + member.getName());
+        JButton btnViewInfo = new JButton(member.getFirstname() + " " + member.getName());
         btnViewInfo.setFont(new Font("Tahoma", Font.PLAIN, 12));
         btnViewInfo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -46,15 +45,13 @@ public class MemberDashboard extends JFrame {
         btnViewInfo.setBounds(20, 20, 250, 35);
         contentPane.add(btnViewInfo);
         
-        // Titre centré ClubVelo
         JLabel lblTitle = new JLabel("ClubVelo");
         lblTitle.setFont(new Font("Tahoma", Font.BOLD, 28));
         lblTitle.setHorizontalAlignment(JLabel.CENTER);
         lblTitle.setBounds(300, 20, 320, 35);
         contentPane.add(lblTitle);
         
-        // Bouton déconnexion (haut droit)
-        JButton btnLogout = new JButton("Disconnect");
+        JButton btnLogout = new JButton("Se déconnecter");
         btnLogout.setFont(new Font("Tahoma", Font.PLAIN, 12));
         btnLogout.setForeground(new Color(200, 50, 50));
         btnLogout.addActionListener(new ActionListener() {
@@ -65,13 +62,24 @@ public class MemberDashboard extends JFrame {
         btnLogout.setBounds(720, 20, 160, 35);
         contentPane.add(btnLogout);
         
-        // Message de bienvenue
         JLabel lblWelcome = new JLabel("Bienvenue, " + member.getFirstname() + " " + member.getName() + " !");
         lblWelcome.setFont(new Font("Tahoma", Font.PLAIN, 18));
-        lblWelcome.setBounds(20, 75, 860, 30);
+        lblWelcome.setBounds(20, 75, 430, 30);
         contentPane.add(lblWelcome);
+
+        JButton btnCategories = new JButton("Voir les catégories");
+        btnCategories.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        btnCategories.setBounds(720, 78, 160, 35);
+        btnCategories.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		openCategoriesCatalog();
+        	}
+        });
+        contentPane.add(btnCategories);
         
-        // ==================== SECTION ÉVÉNEMENTS ====================
+        
+        
+        //Partie événements et inscriptions
         JPanel eventsPanel = new JPanel();
         eventsPanel.setBackground(new Color(240, 240, 240));
         eventsPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
@@ -94,7 +102,6 @@ public class MemberDashboard extends JFrame {
         btnViewAllEvents.setBounds(10, 45, 390, 35);
         eventsPanel.add(btnViewAllEvents);
         
-        // Séparateur
         JPanel separator = new JPanel();
         separator.setBackground(new Color(180, 180, 180));
         separator.setBounds(10, 95, 390, 1);
@@ -114,7 +121,6 @@ public class MemberDashboard extends JFrame {
             }
         });
         eventsPanel.add(btnMyInscriptionsCyclist);
-
         
         JButton btnMyInscriptionsDriver = new JButton("En tant que conducteur");
         btnMyInscriptionsDriver.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -126,8 +132,9 @@ public class MemberDashboard extends JFrame {
         });
         eventsPanel.add(btnMyInscriptionsDriver);
 
-        
-        // ==================== SECTION PAIEMENT ====================
+
+
+        //Partie paiements
         JPanel paymentPanel = new JPanel();
         paymentPanel.setBackground(new Color(240, 240, 240));
         paymentPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
@@ -161,13 +168,27 @@ public class MemberDashboard extends JFrame {
         btnPaySubscription.setForeground(Color.BLACK);
         btnPaySubscription.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                handlePayment(txtAmount);
+                handleAddFunds(txtAmount);
             }
         });
         btnPaySubscription.setBounds(10, 125, 390, 40);
         paymentPanel.add(btnPaySubscription);
         
-        // ==================== SECTION VÉLOS ====================
+        JButton btnPaySubscriptionFee = new JButton("Payer cotisations");
+        btnPaySubscriptionFee.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnPaySubscriptionFee.setBackground(new Color(255, 200, 100));
+        btnPaySubscriptionFee.setForeground(Color.BLACK);
+        btnPaySubscriptionFee.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                handleFeePayment();
+            }
+        });
+        btnPaySubscriptionFee.setBounds(10, 180, 390, 40);
+        paymentPanel.add(btnPaySubscriptionFee);
+        
+        
+        
+        //Partie vélos
         JPanel bikesPanel = new JPanel();
         bikesPanel.setBackground(new Color(240, 240, 240));
         bikesPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
@@ -180,7 +201,7 @@ public class MemberDashboard extends JFrame {
         lblBikesTitle.setBounds(10, 10, 200, 25);
         bikesPanel.add(lblBikesTitle);
         
-        JButton btnMyBikes = new JButton("My bikes");
+        JButton btnMyBikes = new JButton("Mes vélos");
         btnMyBikes.setFont(new Font("Tahoma", Font.PLAIN, 12));
         btnMyBikes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -190,7 +211,7 @@ public class MemberDashboard extends JFrame {
         btnMyBikes.setBounds(10, 55, 185, 35);
         bikesPanel.add(btnMyBikes);
         
-        JButton btnAddBike = new JButton("Add a bike");
+        JButton btnAddBike = new JButton("Ajouter un vélo");
         btnAddBike.setFont(new Font("Tahoma", Font.PLAIN, 12));
         btnAddBike.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -200,7 +221,9 @@ public class MemberDashboard extends JFrame {
         btnAddBike.setBounds(205, 55, 195, 35);
         bikesPanel.add(btnAddBike);
         
-        // ==================== SECTION VÉHICULES ====================
+        
+        
+        //Partie véhicules
         JPanel vehiclesPanel = new JPanel();
         vehiclesPanel.setBackground(new Color(240, 240, 240));
         vehiclesPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
@@ -213,7 +236,7 @@ public class MemberDashboard extends JFrame {
         lblVehiclesTitle.setBounds(10, 10, 200, 25);
         vehiclesPanel.add(lblVehiclesTitle);
         
-        JButton btnMyVehicles = new JButton("My cars");
+        JButton btnMyVehicles = new JButton("Mes véhicules");
         btnMyVehicles.setFont(new Font("Tahoma", Font.PLAIN, 12));
         btnMyVehicles.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -223,7 +246,7 @@ public class MemberDashboard extends JFrame {
         btnMyVehicles.setBounds(10, 55, 185, 35);
         vehiclesPanel.add(btnMyVehicles);
         
-        JButton btnAddVehicle = new JButton("Add a car");
+        JButton btnAddVehicle = new JButton("Ajouter un véhicule");
         btnAddVehicle.setFont(new Font("Tahoma", Font.PLAIN, 12));
         btnAddVehicle.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -232,8 +255,6 @@ public class MemberDashboard extends JFrame {
         });
         btnAddVehicle.setBounds(205, 55, 195, 35);
         vehiclesPanel.add(btnAddVehicle);
-        
-        setLocationRelativeTo(null);
     }
     
     private void openUserInfo() {
@@ -246,7 +267,7 @@ public class MemberDashboard extends JFrame {
         calendarFrame.setVisible(true);
     }
     
-    private void handlePayment(JTextField txtAmount) {
+    private void handleAddFunds(JTextField txtAmount) {
         try {
             String amountStr = txtAmount.getText().trim().replace("€", "").replace(",", ".");
             if (amountStr.isEmpty()) {
@@ -260,7 +281,7 @@ public class MemberDashboard extends JFrame {
             double amount = Double.parseDouble(amountStr);
             if (amount <= 0) {
                 JOptionPane.showMessageDialog(this, 
-                    "Le montant doit être supérieur à 0.", 
+                    "Le montant doit être supérieur à 0€.", 
                     "Montant invalide", 
                     JOptionPane.ERROR_MESSAGE);
                 return;
@@ -276,19 +297,15 @@ public class MemberDashboard extends JFrame {
                 boolean success = personDAO.updateBalance(member.getId(), amount);
                 
                 if (success) {
-                    // Mettre à jour la balance locale du membre
                     member.setBalance(member.getBalance() + amount);
                     
                     JOptionPane.showMessageDialog(this, 
-                        "Ajout de " + String.format("%.2f €", amount) + " effectué avec succès!\n" +
+                        "Ajout de " + String.format("%.2f €", amount) + " effectué avec succès.\n" +
                         "Nouveau solde : " + String.format("%.2f €", member.getBalance()), 
                         "Succès", 
                         JOptionPane.INFORMATION_MESSAGE);
                     
-                    // Vider le champ de texte
-                    txtAmount.setText("");
-                    
-                    // Rafraîchir l'affichage du dashboard
+                    txtAmount.setText(""); 
                     refreshDashboard();
                 } else {
                     JOptionPane.showMessageDialog(this, 
@@ -300,16 +317,76 @@ public class MemberDashboard extends JFrame {
             
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, 
-                "Veuillez entrer un montant valide (ex: 10 ou 10.50).", 
+                "Veuillez entrer un montant valide (ex: 10 ou 3.50).", 
                 "Format invalide", 
                 JOptionPane.ERROR_MESSAGE);
         }
     }
     
-    private void handleLogout() {
+	private void handleFeePayment() {
+	    // Calculer le montant de la cotisation directement depuis l'objet member
+	    double subscriptionFee = member.countCategories();
+	    int categoryCount = member.getCategories().size();
+	    String message;
+	    
+	    if (categoryCount == 1) {
+	        message = "Confirmer le paiement de la cotisation de " + String.format("%.2f €", subscriptionFee) + " ?\n" +
+	                  "(1 catégorie : 20€)\n" +
+	                  "Votre solde actuel : " + String.format("%.2f €", member.getBalance());
+	    } else {
+	        message = "Confirmer le paiement de la cotisation de " + String.format("%.2f €", subscriptionFee) + " ?\n" +
+	                  "(" + categoryCount + " catégories : 20€ + " + (categoryCount - 1) + " x 5€)\n" +
+	                  "Votre solde actuel : " + String.format("%.2f €", member.getBalance());
+	    }
+	    
+	    int confirm = JOptionPane.showConfirmDialog(this, 
+	        message,
+	        "Confirmation de paiement", 
+	        JOptionPane.YES_NO_OPTION,
+	        JOptionPane.QUESTION_MESSAGE);
+	    
+	    if (confirm == JOptionPane.YES_OPTION) {
+	        if (member.getBalance() >= subscriptionFee) {
+	            PersonDAO personDAO = new PersonDAO();
+	            boolean success = personDAO.payFee(member.getId(), subscriptionFee);
+	            
+	            if (success) {
+	                member.setBalance(member.getBalance() - subscriptionFee);
+	                
+	                JOptionPane.showMessageDialog(this, 
+	                    "Paiement des cotisations effectué avec succès.\n" +
+	                    "Montant payé : " + String.format("%.2f €", subscriptionFee) + "\n" +
+	                    "Nouveau solde : " + String.format("%.2f €", member.getBalance()), 
+	                    "Succès", 
+	                    JOptionPane.INFORMATION_MESSAGE);
+	                
+	                refreshDashboard();
+	            } else {
+	                JOptionPane.showMessageDialog(this, 
+	                    "Erreur lors du paiement. Veuillez réessayer.", 
+	                    "Erreur", 
+	                    JOptionPane.ERROR_MESSAGE);
+	            }
+	        } else {
+	            JOptionPane.showMessageDialog(this, 
+	                "Solde insuffisant pour effectuer ce paiement.\n" +
+	                "Solde actuel : " + String.format("%.2f €", member.getBalance()) + "\n" +
+	                "Montant requis : " + String.format("%.2f €", subscriptionFee),
+	                "Solde insuffisant", 
+	                JOptionPane.WARNING_MESSAGE);
+	        }
+	    }
+	}
+
+	private void handleLogout() {
         mainFrame.onLogout();
         this.dispose();
     }
+	
+	private void openCategoriesCatalog() {
+		CategoriesCatalogFrame categoryCatalogFrame = new CategoriesCatalogFrame(member);
+		categoryCatalogFrame.setVisible(true);
+	}
     
     private void openBikesList() {
         BikesListFrame bikesListFrame = new BikesListFrame(member);
@@ -340,10 +417,7 @@ public class MemberDashboard extends JFrame {
         MySubscriptionsFrame subscriptionsFrame = new MySubscriptionsFrame(member, false);
         subscriptionsFrame.setVisible(true);
     }
-    
-    /**
-     * Rafraîchit l'affichage du dashboard (notamment le solde)
-     */
+
     private void refreshDashboard() {
         lblBalance.setText("Solde actuel : " + String.format("%.2f€", member.getBalance()));
     }
