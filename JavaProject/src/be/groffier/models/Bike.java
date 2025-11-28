@@ -6,6 +6,7 @@ import java.util.List;
 public class Bike {
 	private static int ID = 0;
 	private int id;
+	private String name;  // Ajout du nom
 	private String type;
 	private double weight;
 	private double length;
@@ -29,6 +30,9 @@ public class Bike {
     public int getId() { return id; }
     public void setId(int value) { id = value; }
     
+    public String getName() { return name; }
+    public void setName(String value) { name = value; }
+    
     public String getType() { return type; }
     public void setType(String value) { type = value; }
     
@@ -46,6 +50,4 @@ public class Bike {
     
     public Vehicle getVehicle() { return vehicle; }
     public void setVehicle(Vehicle value) { vehicle = value; }
-    
-	
 }

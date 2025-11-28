@@ -30,7 +30,7 @@ public class Vehicle {
 	}
 	
     public int getId() { return id; }
-    private void setId(int value) { id = value; }
+    public void setId(int value) { id = value; }
     
     public int getSeatNumber() { return seatNumber; }
     private void setSeatNumber(int value) { seatNumber = value; }

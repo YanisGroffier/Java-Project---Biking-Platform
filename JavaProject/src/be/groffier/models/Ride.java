@@ -5,6 +5,7 @@ import java.util.*;
 public class Ride {
 	private static int ID = 0;
 	private int num;
+	private String name;
 	private String startPlace;
 	private Date startDate;
 	private double fee;
@@ -13,8 +14,9 @@ public class Ride {
 	private List<Vehicle> vehicles;
 	
 	
-	public Ride(String startPlace, Date startDate, double fee) {
+	public Ride(String name, String startPlace, Date startDate, double fee) {
 		setNum(ID++);
+		setName(name);
 		setStartPlace(startPlace);
 		setStartDate(startDate);
 		setFee(fee);
@@ -25,6 +27,9 @@ public class Ride {
 
 	public int getNum() { return num; }
 	public void setNum(int value) { num = value; }
+
+	public String getName() { return name; }
+	public void setName(String value) { name = value; }
 	
 	public String getStartPlace() { return startPlace; }
 	public void setStartPlace (String value) {startPlace = value; }
