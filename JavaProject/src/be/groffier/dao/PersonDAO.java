@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
 import be.groffier.database.DBConnection;
 import be.groffier.models.Person;
 import be.groffier.models.Member;
@@ -12,14 +14,7 @@ import be.groffier.models.Treasurer;
 import be.groffier.models.Category;
 
 public class PersonDAO {
-    
-    /**
-     * Vérifie les credentials et retourne le bon type de Person (Member, Manager ou Treasurer)
-     * Utilise LEFT JOIN pour récupérer le rôle en une seule requête
-     * @param name Nom d'utilisateur
-     * @param password Mot de passe
-     * @return Person object (Member/Manager/Treasurer) si authentification réussie, null sinon
-     */
+   
     public Person authenticate(String name, String password) {
         Connection conn = DBConnection.getConnection();
         if (conn == null) {
@@ -49,44 +44,37 @@ public class PersonDAO {
                 String tel = rs.getString("phone");
                 String pwd = rs.getString("password");
                 
-                // Vérifier quel rôle la personne a (priorité: Treasurer > Manager > Member)
-                
-                // Est-ce un Treasurer ?
                 if (rs.getObject("treasurer_id") != null) {
                     Treasurer treasurer = new Treasurer(personName, firstname, tel, pwd);
                     treasurer.setId(personId);
-                    System.out.println("Authentification réussie - Treasurer: " + name);
+                    System.out.println("Authentification rÃ©ussie - Treasurer: " + name);
                     return treasurer;
                 }
                 
-                // Est-ce un Manager ?
                 if (rs.getObject("categoryID") != null) {
                     int categoryId = rs.getInt("categoryID");
                     Category category = getCategoryById(categoryId);
                     
                     Manager manager = new Manager(personName, firstname, tel, pwd, category);
                     manager.setId(personId);
-                    System.out.println("Authentification réussie - Manager: " + name);
+                    System.out.println("Authentification rÃ©ussie - Manager: " + name);
                     return manager;
                 }
                 
-                // Est-ce un Member ?
                 if (rs.getObject("balance") != null) {
                     double balance = rs.getDouble("balance");
                     
-                    Member member = new Member(personName, firstname, tel, pwd, balance, 
-                                              null, null, null); // ownedVehicle, category, bike à null temporairement
+                    Member member = new Member(personName, firstname, tel, pwd, balance, null, null, null);
                     member.setId(personId);
-                    System.out.println("Authentification réussie - Member: " + name);
+                    System.out.println("Authentification rÃ©ussie - Member: " + name);
                     return member;
                 }
                 
-                // Si aucun rôle trouvé
-                System.out.println("Personne trouvée mais aucun rôle assigné: " + name);
+                System.out.println("Personne trouvÃ©e mais aucun rÃ´le assignÃ©: " + name);
                 return null;
                 
             } else {
-                System.out.println("Authentification échouée pour: " + name);
+                System.out.println("Authentification Ã©chouÃ©e pour: " + name);
                 return null;
             }
             
@@ -97,11 +85,7 @@ public class PersonDAO {
         }
     }
     
-    /**
-     * Récupère une catégorie par son ID
-     * @param categoryId L'ID de la catégorie
-     * @return Category object ou null
-     */
+
     private Category getCategoryById(int categoryId) {
         Connection conn = DBConnection.getConnection();
         if (conn == null) return null;
@@ -113,28 +97,16 @@ public class PersonDAO {
             ResultSet rs = pstmt.executeQuery();
             
             if (rs.next()) {
-                // TODO: Adapter selon les attributs réels de votre table Category
-                // Exemple si Category a: id, name, description
-                // Category category = new Category(rs.getString("name"), rs.getString("description"));
-                // category.setId(rs.getInt("id"));
-                // return category;
-                
-                // Pour l'instant, retourner null si vous n'avez pas encore la table Category
-                return null;
+                return null; //TODO bizarre ça
             }
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la récupération de la Category!");
+            System.err.println("Erreur lors de la rÃ©cupÃ©ration de la Category!");
             e.printStackTrace();
         }
         
         return null;
     }
     
-    /**
-     * Récupère un utilisateur par son nom
-     * @param name Nom de l'utilisateur
-     * @return Person object ou null
-     */
     public Person getPersonByName(String name) {
         Connection conn = DBConnection.getConnection();
         if (conn == null) {
@@ -162,7 +134,6 @@ public class PersonDAO {
                 String tel = rs.getString("phone");
                 String pwd = rs.getString("password");
                 
-                // Vérifier quel rôle
                 if (rs.getObject("treasurer_id") != null) {
                     Treasurer treasurer = new Treasurer(personName, firstname, tel, pwd);
                     treasurer.setId(personId);
@@ -187,18 +158,13 @@ public class PersonDAO {
             }
             
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la récupération de l'utilisateur!");
+            System.err.println("Erreur lors de la rÃ©cupÃ©ration de l'utilisateur!");
             e.printStackTrace();
         }
         
         return null;
     }
     
-    /**
-     * Crée un nouvel utilisateur dans la base de données
-     * @param person L'objet Person à insérer
-     * @return true si l'insertion réussit, false sinon
-     */
     public boolean createPerson(Person person) {
         Connection conn = DBConnection.getConnection();
         if (conn == null) {
@@ -217,17 +183,12 @@ public class PersonDAO {
             return rowsAffected > 0;
             
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la création de l'utilisateur!");
+            System.err.println("Erreur lors de la crÃ©ation de l'utilisateur!");
             e.printStackTrace();
             return false;
         }
     }
     
-    /**
-     * Met à jour un utilisateur existant
-     * @param person L'objet Person avec les nouvelles données
-     * @return true si la mise à jour réussit, false sinon
-     */
     public boolean updatePerson(Person person) {
         Connection conn = DBConnection.getConnection();
         if (conn == null) {
@@ -247,17 +208,12 @@ public class PersonDAO {
             return rowsAffected > 0;
             
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la mise à jour de l'utilisateur!");
+            System.err.println("Erreur lors de la mise Ã  jour de l'utilisateur!");
             e.printStackTrace();
             return false;
         }
     }
     
-    /**
-     * Supprime un utilisateur de la base de données
-     * @param id L'ID de l'utilisateur à supprimer
-     * @return true si la suppression réussit, false sinon
-     */
     public boolean deletePerson(int id) {
         Connection conn = DBConnection.getConnection();
         if (conn == null) {
@@ -295,17 +251,12 @@ public class PersonDAO {
             return rowsAffected > 0;
             
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la mise à jour de la balance du membre #" + memberId);
+            System.err.println("Erreur lors de la mise Ã  jour de la balance du membre #" + memberId);
             e.printStackTrace();
             return false;
         }
     }
-
-    /**
-     * Récupère la balance actuelle d'un membre depuis la DB
-     * @param memberId L'ID du membre
-     * @return La balance du membre, ou 0.0 en cas d'erreur
-     */
+    
     public double getMemberBalance(int memberId) {
         Connection conn = DBConnection.getConnection();
         if (conn == null) {
@@ -323,10 +274,101 @@ public class PersonDAO {
             }
             
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la récupération de la balance du membre #" + memberId);
+            System.err.println("Erreur lors de la rÃ©cupÃ©ration de la balance du membre #" + memberId);
             e.printStackTrace();
         }
         
         return 0.0;
+    }
+    
+    public List<Member> getAllMembers() {
+        List<Member> members = new java.util.ArrayList<>();
+        Connection conn = DBConnection.getConnection();
+        if (conn == null) {
+            return members;
+        }
+        
+        String query = "SELECT p.id, p.name, p.firstname, p.phone, p.password, m.balance " +
+                       "FROM Person p " +
+                       "INNER JOIN Member m ON p.id = m.id " +
+                       "ORDER BY p.id";
+        
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String firstname = rs.getString("firstname");
+                String phone = rs.getString("phone");
+                String password = rs.getString("password");
+                double balance = rs.getDouble("balance");
+                
+                Member member = new Member(name, firstname, phone, password, balance, 
+                                          null, null, null);
+                member.setId(id);
+                members.add(member);
+            }
+            
+            System.out.println("Récupération de " + members.size() + " membres");
+            
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération des membres!");
+            e.printStackTrace();
+        }
+        
+        return members;
+    }
+    
+    public boolean payFee(int memberId, double feeAmount) {
+        Connection conn = DBConnection.getConnection();
+        if (conn == null) {
+            return false;
+        }
+        
+        String checkQuery = "SELECT balance FROM Member WHERE id = ?";
+        
+        try (PreparedStatement checkStmt = conn.prepareStatement(checkQuery)) {
+            checkStmt.setInt(1, memberId);
+            ResultSet rs = checkStmt.executeQuery();
+            
+            if (rs.next()) {
+                double currentBalance = rs.getDouble("balance");
+                
+                if (currentBalance < feeAmount) {
+                    System.err.println("Solde insuffisant pour le membre #" + memberId +". Solde: " + currentBalance + ", Requis: " + feeAmount);
+                    return false;
+                }
+            } else {
+                System.err.println("Membre #" + memberId + " introuvable");
+                return false;
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la vérification du solde du membre #" + memberId);
+            e.printStackTrace();
+            return false;
+        }
+        
+        String updateQuery = "UPDATE Member SET balance = balance - ? WHERE id = ?";
+        
+        try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
+            pstmt.setDouble(1, feeAmount);
+            pstmt.setInt(2, memberId);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                System.out.println("Paiement de cotisation effectué pour le membre #" + memberId + ": " + feeAmount + "€");
+                return true;
+            }
+            
+            return false;
+            
+        } catch (SQLException e) {
+            System.err.println("Erreur lors du paiement de la cotisation du membre #" + memberId);
+            e.printStackTrace();
+            return false;
+        }
     }
 }
