@@ -164,7 +164,7 @@ public class CreateRideFrame extends JFrame {
 
         } catch (ParseException ex) {
             JOptionPane.showMessageDialog(this,
-                "Format de date invalide. Utilisez: dd/MM/yyyy\nExemple: 09/09/2025",
+                "Format de date invalide. Utilisez: jj/mm/aaaa\nExemple: 09/09/2006",
                 "Format invalide",
                 JOptionPane.ERROR_MESSAGE);
         } catch (NumberFormatException ex) {

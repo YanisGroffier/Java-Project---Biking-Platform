@@ -38,7 +38,7 @@ public class SubscriptionFrame extends JFrame {
         mainPanel.setBackground(Color.WHITE);
         mainPanel.setBorder(new EmptyBorder(35, 40, 40, 40));
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        add(mainPanel);
+        getContentPane().add(mainPanel);
 
         JLabel titleLabel = new JLabel("S'inscrire");
         titleLabel.setFont(new Font("Tahoma", Font.BOLD, 32));
@@ -87,14 +87,12 @@ public class SubscriptionFrame extends JFrame {
         mainPanel.add(Box.createRigidArea(new Dimension(0, 60)));
 
         JButton btnSubmit = new JButton("S'inscrire");
+        btnSubmit.setBackground(new Color(144, 238, 144));
         btnSubmit.setFont(new Font("Tahoma", Font.BOLD, 17));
-        btnSubmit.setBackground(new Color(70, 130, 180));
-        btnSubmit.setForeground(Color.WHITE);
         btnSubmit.setFocusPainted(false);
         btnSubmit.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnSubmit.setMaximumSize(new Dimension(280, 60));
         btnSubmit.setPreferredSize(new Dimension(280, 60));
-        btnSubmit.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
 
         btnSubmit.addActionListener(e -> handleSubscription());
 

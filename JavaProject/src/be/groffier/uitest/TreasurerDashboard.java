@@ -27,7 +27,7 @@ public class TreasurerDashboard extends JFrame {
         setBounds(100, 100, 920, 680);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(20, 20, 20, 20));
-        contentPane.setBackground(Color.WHITE);
+        contentPane.setBackground(new Color(240, 255, 240));
         setContentPane(contentPane);
         contentPane.setLayout(null);
         

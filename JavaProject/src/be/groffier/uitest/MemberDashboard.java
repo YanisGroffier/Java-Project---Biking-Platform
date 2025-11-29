@@ -164,9 +164,7 @@ public class MemberDashboard extends JFrame {
         paymentPanel.add(txtAmount);
         
         JButton btnPaySubscription = new JButton("Ajouter fonds");
-        btnPaySubscription.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnPaySubscription.setBackground(new Color(144, 238, 144));
-        btnPaySubscription.setForeground(Color.BLACK);
+        btnPaySubscription.setFont(new Font("Tahoma", Font.PLAIN, 12));
         btnPaySubscription.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 handleAddFunds(txtAmount);
@@ -176,9 +174,7 @@ public class MemberDashboard extends JFrame {
         paymentPanel.add(btnPaySubscription);
         
         JButton btnPaySubscriptionFee = new JButton("Payer cotisations");
-        btnPaySubscriptionFee.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnPaySubscriptionFee.setBackground(new Color(255, 200, 100));
-        btnPaySubscriptionFee.setForeground(Color.BLACK);
+        btnPaySubscriptionFee.setFont(new Font("Tahoma", Font.PLAIN, 12));
         btnPaySubscriptionFee.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 handleFeePayment();

@@ -24,6 +24,7 @@ public class LoginFrame extends JFrame {
     private PersonDAO personDAO;
 
     public LoginFrame(MainFrame mainFrame) {
+    	setResizable(false);
         this.mainFrame = mainFrame;
         this.personDAO = new PersonDAO();
         

@@ -20,6 +20,7 @@ public class ManagerDashboard extends JFrame {
     private Manager manager;
 
     public ManagerDashboard(MainFrame mainFrame, Manager manager) {
+    	setResizable(false);
         this.mainFrame = mainFrame;
         this.manager = manager;
         
@@ -95,7 +96,6 @@ public class ManagerDashboard extends JFrame {
         
         JButton btnConsultCategoryEvents = new JButton("Mes événements");
         btnConsultCategoryEvents.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        btnConsultCategoryEvents.setBackground(new Color(240, 240, 240));
         btnConsultCategoryEvents.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 openMyCategoryEvents();

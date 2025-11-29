@@ -46,6 +46,8 @@ public class CategoriesCatalogFrame extends JFrame {
         createCategoryRow(categoriesPanel, CategoryEnum.MountainBike_Downhill, 2);
         createCategoryRow(categoriesPanel, CategoryEnum.MountainBike_Cross, 3);
         createCategoryRow(categoriesPanel, CategoryEnum.RoadBike, 4);
+        
+        setLocationRelativeTo(null);
     }
 
     private void createCategoryRow(JPanel parent, CategoryEnum category, int categoryId) {
