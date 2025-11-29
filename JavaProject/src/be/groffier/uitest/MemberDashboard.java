@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import be.groffier.models.Member;
+import be.groffier.dao.CategoryMemberDAO;
 import be.groffier.dao.PersonDAO;
 
 public class MemberDashboard extends JFrame {
@@ -28,7 +29,7 @@ public class MemberDashboard extends JFrame {
         
         setTitle("Bienvenue");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 920, 680);
+        setBounds(100, 100, 920, 626);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(20, 20, 20, 20));
         contentPane.setBackground(Color.WHITE);
@@ -324,17 +325,15 @@ public class MemberDashboard extends JFrame {
     }
     
 	private void handleFeePayment() {
-	    double subscriptionFee = member.countCategories();
-	    int categoryCount = member.getCategories().size();
+		CategoryMemberDAO categoryMemberDAO = new CategoryMemberDAO();
+	    double subscriptionFee = categoryMemberDAO.getFeeAmount(member.getId());
 	    String message;
 	    
-	    if (categoryCount == 1) {
+	    if (subscriptionFee == 20) {
 	        message = "Confirmer le paiement de la cotisation de " + String.format("%.2f €", subscriptionFee) + " ?\n" +
-	                  "(1 catégorie : 20€)\n" +
 	                  "Votre solde actuel : " + String.format("%.2f €", member.getBalance());
 	    } else {
 	        message = "Confirmer le paiement de la cotisation de " + String.format("%.2f €", subscriptionFee) + " ?\n" +
-	                  "(" + categoryCount + " catégories : 20€ + " + (categoryCount - 1) + " x 5€)\n" +
 	                  "Votre solde actuel : " + String.format("%.2f €", member.getBalance());
 	    }
 	    

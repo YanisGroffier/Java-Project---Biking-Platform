@@ -93,6 +93,15 @@ public class CategoryMemberDAO {
 
         return categories;
     }
+    
+    public int getNumberOfCategories(int memberId) {
+    	return getMemberCategories(memberId).size();
+    }
+    
+    public double getFeeAmount(int memberId) {
+    	int size = getNumberOfCategories(memberId);
+	    return size > 1 ? 20 + (size - 1) * 5 : 20;
+    }
 
     public boolean removeMemberFromCategory(int memberId, int categoryId) {
         Connection conn = DBConnection.getConnection();

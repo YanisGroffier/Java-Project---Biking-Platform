@@ -16,7 +16,7 @@ public class CalendarDAO{
         Calendar calendar = new Calendar();
         RideDAO rideDAO = new RideDAO();
         
-        List<Ride> rides = rideDAO.getAllRides();
+        List<Ride> rides = rideDAO.getUpcomingRides();
         
         for (Ride ride : rides) {
             calendar.addRide(ride);

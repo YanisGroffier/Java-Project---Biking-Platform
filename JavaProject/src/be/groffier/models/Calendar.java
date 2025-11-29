@@ -1,7 +1,12 @@
 package be.groffier.models;
 
+import java.awt.Dimension;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.Box;
+import javax.swing.JPanel;
 
 public class Calendar {
 	private static int ID = 0;

@@ -61,9 +61,4 @@ public class Member extends Person{
 	public double checkBalance() {
 		return getBalance();
 	}
-	
-	public double countCategories() {
-	    int size = categories.size();
-	    return size > 1 ? 20 + (size - 1) * 5 : 20;
-	}
 }
