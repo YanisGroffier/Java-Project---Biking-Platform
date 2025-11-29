@@ -6,7 +6,7 @@ import java.util.List;
 public class Bike {
 	private static int ID = 0;
 	private int id;
-	private String name;  // Ajout du nom
+	private String name;
 	private String type;
 	private double weight;
 	private double length;

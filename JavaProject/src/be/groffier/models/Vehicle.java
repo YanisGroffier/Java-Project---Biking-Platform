@@ -14,7 +14,6 @@ public class Vehicle {
 	private List<Bike> bikes;
 	private List<Ride> rides;
 	
-	
 	public Vehicle(int seatNumber, int bikeSpotNumber, 
 				   Member driver, Ride ride) {
 		setId(ID++);
