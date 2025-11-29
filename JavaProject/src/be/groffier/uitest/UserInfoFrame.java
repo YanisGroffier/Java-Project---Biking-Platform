@@ -13,6 +13,7 @@ import be.groffier.models.Person;
 import be.groffier.models.Member;
 import be.groffier.models.Manager;
 import be.groffier.models.Treasurer;
+import javax.swing.JSeparator;
 
 public class UserInfoFrame extends JFrame {
 
@@ -44,11 +45,9 @@ public class UserInfoFrame extends JFrame {
         lblRole.setBounds(30, 120, 300, 25);
         contentPane.add(lblRole);
         
-        JLabel lblSeparator1 = new JLabel("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"); //TODO changer en separator
-        lblSeparator1.setFont(new Font("Dialog", Font.PLAIN, 12));
-        lblSeparator1.setForeground(Color.LIGHT_GRAY);
-        lblSeparator1.setBounds(30, 90, 420, 20);
-        contentPane.add(lblSeparator1);
+        JSeparator separator = new JSeparator();
+        separator.setBounds(30, 96, 250, 2);
+        contentPane.add(separator);
         
         JLabel lblBasicInfo = new JLabel("Informations personnelles");
         lblBasicInfo.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -71,11 +70,9 @@ public class UserInfoFrame extends JFrame {
         lblTel.setBounds(50, 230, 400, 20);
         contentPane.add(lblTel);
         
-        JLabel lblSeparator2 = new JLabel("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"); //TODO changer en separator
-        lblSeparator2.setFont(new Font("Dialog", Font.PLAIN, 12));
-        lblSeparator2.setForeground(Color.LIGHT_GRAY);
-        lblSeparator2.setBounds(30, 260, 420, 20);
-        contentPane.add(lblSeparator2);
+        JSeparator separator_1 = new JSeparator();
+        separator_1.setBounds(30, 278, 250, 2);
+        contentPane.add(separator_1);
         
         int yPosition = 290;
         

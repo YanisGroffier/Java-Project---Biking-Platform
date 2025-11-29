@@ -1,6 +1,8 @@
 package be.groffier.uitest;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 import be.groffier.models.Person;
 import be.groffier.models.Member;
 import be.groffier.models.Manager;
@@ -26,6 +28,7 @@ public class MainFrame {
         if (currentUser instanceof Treasurer) currentDashboard = new TreasurerDashboard(this, (Treasurer) currentUser);
         else if (currentUser instanceof Manager) currentDashboard = new ManagerDashboard(this, (Manager) currentUser);
         else if (currentUser instanceof Member) currentDashboard = new MemberDashboard(this, (Member) currentUser);
+        
         else {
             System.err.println("Erreur à l'authentification du type d'utilisateur.");
             return;
@@ -54,7 +57,7 @@ public class MainFrame {
     }
     
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new MainFrame();
             }

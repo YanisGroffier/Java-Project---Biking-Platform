@@ -324,7 +324,6 @@ public class MemberDashboard extends JFrame {
     }
     
 	private void handleFeePayment() {
-	    // Calculer le montant de la cotisation directement depuis l'objet member
 	    double subscriptionFee = member.countCategories();
 	    int categoryCount = member.getCategories().size();
 	    String message;
