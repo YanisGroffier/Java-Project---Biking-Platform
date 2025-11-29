@@ -12,6 +12,7 @@ import be.groffier.models.Member;
 import be.groffier.models.Manager;
 import be.groffier.models.Treasurer;
 import be.groffier.models.Category;
+import be.groffier.models.CategoryEnum;
 
 public class PersonDAO {
    
@@ -56,6 +57,7 @@ public class PersonDAO {
                     Category category = getCategoryById(categoryId);
                     
                     Manager manager = new Manager(personName, firstname, tel, pwd, category);
+                    System.out.println(manager.getCategory());
                     manager.setId(personId);
                     System.out.println("Authentification rÃ©ussie - Manager: " + name);
                     return manager;
@@ -66,15 +68,15 @@ public class PersonDAO {
                     
                     Member member = new Member(personName, firstname, tel, pwd, balance, null, null, null);
                     member.setId(personId);
-                    System.out.println("Authentification rÃ©ussie - Member: " + name);
+                    System.out.println("Authentification réussie - Member: " + name);
                     return member;
                 }
                 
-                System.out.println("Personne trouvÃ©e mais aucun rÃ´le assignÃ©: " + name);
+                System.out.println("Personne trouvÃ©e mais aucun rôle assigné: " + name);
                 return null;
                 
             } else {
-                System.out.println("Authentification Ã©chouÃ©e pour: " + name);
+                System.out.println("Authentification échouée pour: " + name);
                 return null;
             }
             
@@ -97,16 +99,27 @@ public class PersonDAO {
             ResultSet rs = pstmt.executeQuery();
             
             if (rs.next()) {
-                return null; //TODO bizarre ça
+                int id = rs.getInt("id");
+                String categoryName = rs.getString("CategoryName");
+                
+                // Convertir le String en CategoryEnum
+                CategoryEnum categoryEnum = CategoryEnum.valueOf(categoryName);
+                
+                // Créer la Category avec le constructeur minimal
+                Category category = new Category(id, categoryEnum);
+                
+                return category;
             }
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la rÃ©cupÃ©ration de la Category!");
+            System.err.println("Erreur lors de la récupération de la Category!");
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            System.err.println("CategoryName invalide en base de données!");
             e.printStackTrace();
         }
         
         return null;
-    }
-    
+    }    
     public Person getPersonByName(String name) {
         Connection conn = DBConnection.getConnection();
         if (conn == null) {

@@ -22,11 +22,12 @@ public class UserInfoFrame extends JFrame {
     private Person user;
 
     public UserInfoFrame(Person user) {
+    	setResizable(false);
         this.user = user;
         
         setTitle("Informations utilisateur");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 500, 450);
+        setBounds(100, 100, 321, 450);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setBackground(new Color(248, 248, 255));
@@ -115,7 +116,7 @@ public class UserInfoFrame extends JFrame {
                 dispose();
             }
         });
-        btnClose.setBounds(180, 370, 120, 35);
+        btnClose.setBounds(92, 365, 120, 35);
         contentPane.add(btnClose);
         
         setLocationRelativeTo(null);

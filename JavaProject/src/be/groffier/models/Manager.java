@@ -10,7 +10,6 @@ public class Manager extends Person{
 		
 	public Category getCategory() { return category; }
 	public void setCategory(Category value) { category = value; }
-	
 	public void publishCalendar() {}
 	public void calculateRideBudget(Ride ride) {}
 }

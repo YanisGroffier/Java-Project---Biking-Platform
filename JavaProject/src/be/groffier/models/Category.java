@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Category {
-	private static int ID = 0;
 	private int num;
 	
 	private Manager manager;
@@ -12,13 +11,20 @@ public class Category {
 	private List<Member> members;
 	private Calendar calendar;
 	
-	public Category(Manager manager, CategoryEnum category, Calendar calendar) {
-		setNum(ID++);
+	public Category(int id, Manager manager, CategoryEnum category, Calendar calendar) {
+		setNum(id);
 		
 		setManager(manager);
 		setCategory(category);
 		setMembers(new ArrayList<>());
 		setCalendar(calendar);
+	}
+	public Category(int id, CategoryEnum category) {
+	    setNum(id);
+	    setManager(null);
+	    setCategory(category);
+	    setMembers(new ArrayList<>());
+	    setCalendar(null);
 	}
 
 	public int getNum() { return num; }
@@ -39,5 +45,10 @@ public class Category {
 	public boolean addMember(Member m) {
 		if (members.contains(m)) {return false;}
 		else {members.add(m); return true;}
+	}
+	
+	@Override
+	public String toString() {
+		return category.toString().replace("_", " ");
 	}
 }

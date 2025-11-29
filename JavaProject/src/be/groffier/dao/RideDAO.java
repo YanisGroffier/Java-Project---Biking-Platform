@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import be.groffier.database.DBConnection;
+import be.groffier.models.Category;
 import be.groffier.models.Ride;
 
 public class RideDAO {
@@ -132,16 +133,18 @@ public class RideDAO {
         return null;
     }
     
-    public boolean createRide(Ride ride) {
+    public boolean createRide(Ride ride, int category) {
         Connection conn = DBConnection.getConnection();
         if (conn == null) return false;
         
-        String query = "INSERT INTO Ride (name, startPlace, startDate, fee) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO Ride (name, categoryID, startPlace, startDate, fee) VALUES (?, ?, ?, ?, ?)";
         
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, ride.getStartPlace());
-            pstmt.setDate(2, new java.sql.Date(ride.getStartDate().getTime()));
-            pstmt.setDouble(3, ride.getFee());
+        	pstmt.setString(1, ride.getName());
+            pstmt.setInt(2, category);
+            pstmt.setString(3, ride.getStartPlace());
+            pstmt.setDate(4, new java.sql.Date(ride.getStartDate().getTime()));
+            pstmt.setDouble(5, ride.getFee());
             
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
