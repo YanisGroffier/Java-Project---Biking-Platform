@@ -1,4 +1,4 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,8 +12,7 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import be.groffier.models.Member;
-import be.groffier.dao.VehicleDAO;
-import javax.swing.JScrollBar;
+import be.groffier.models.Vehicle;
 
 public class AddCarFrame extends JFrame {
 
@@ -93,8 +92,8 @@ public class AddCarFrame extends JFrame {
                 return;
             }
 
-            VehicleDAO dao = new VehicleDAO();
-            if (dao.addVehicle(member.getId(), nbrPlaces, nbrBikes)) {
+            Vehicle vehicle = new Vehicle(nbrPlaces, nbrBikes, member, null);
+            if (vehicle.saveToDatabase(member.getId())) {
                 JOptionPane.showMessageDialog(this, "Véhicule ajouté avec succès !", "Succès", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
             } else {

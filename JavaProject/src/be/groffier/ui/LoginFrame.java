@@ -1,4 +1,4 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,7 +12,6 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import be.groffier.models.Person;
-import be.groffier.dao.PersonDAO;
 
 public class LoginFrame extends JFrame {
 
@@ -21,12 +20,10 @@ public class LoginFrame extends JFrame {
     private JTextField txtName;
     private JPasswordField txtPassword;
     private MainFrame mainFrame;
-    private PersonDAO personDAO;
 
     public LoginFrame(MainFrame mainFrame) {
     	setResizable(false);
         this.mainFrame = mainFrame;
-        this.personDAO = new PersonDAO();
         
         setTitle("Connexion");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,7 +80,7 @@ public class LoginFrame extends JFrame {
             return;
         }
         
-        Person person = personDAO.authenticate(name, password); //TODO changer en password.hashCode();
+        Person person = Person.auth(name, password);
         
         if (person != null) {
             JOptionPane.showMessageDialog(this, 

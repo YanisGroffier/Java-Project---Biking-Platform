@@ -1,8 +1,12 @@
 package be.groffier.models;
 
+import java.io.Serializable;
+
 import be.groffier.dao.*;
 
-public abstract class Person {
+public abstract class Person implements Serializable {
+
+	private static final long serialVersionUID = 7198120797966685654L;
 	private static int ID = 0;
 	private int id;
 	private String name;
@@ -10,6 +14,7 @@ public abstract class Person {
 	private String tel;
 	private String password;
 	
+	public Person() {}
 	public Person(String name, String firstname, String tel, String password) {
 		setId(ID++);
 		setName(name);
@@ -33,8 +38,8 @@ public abstract class Person {
 	public String getPassword() { return password; }
 	public void setPassword(String value) { password = value; }
 	
-	public static Person auth(String username, String password) {
+	public static Person auth(String name, String password) {
 		PersonDAO p = new PersonDAO();
-		return null; //TODO
+		return p.authenticate(name, password);
 	}
 }

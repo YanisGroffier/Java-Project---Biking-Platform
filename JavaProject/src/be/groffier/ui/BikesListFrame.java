@@ -1,4 +1,4 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -10,7 +10,6 @@ import java.util.List;
 
 import be.groffier.models.Member;
 import be.groffier.models.Bike;
-import be.groffier.dao.BikeDAO;
 
 public class BikesListFrame extends JFrame {
 
@@ -18,11 +17,9 @@ public class BikesListFrame extends JFrame {
     private JPanel contentPane;
     private Member member;
     private JPanel bikesListPanel;
-    private BikeDAO bikeDAO;
 
     public BikesListFrame(Member member) {
         this.member = member;
-        this.bikeDAO = new BikeDAO();
         
         setTitle("Mes Vélos");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -100,7 +97,7 @@ public class BikesListFrame extends JFrame {
     }
     
     private void loadBikes() {
-        List<Bike> bikes = bikeDAO.getBikesByMember(member.getId());
+        List<Bike> bikes = Bike.loadByMemberId(member.getId());
         displayBikes(bikes);
     }
     
@@ -216,7 +213,7 @@ public class BikesListFrame extends JFrame {
             JOptionPane.WARNING_MESSAGE);
         
         if (confirm == JOptionPane.YES_OPTION) {
-            boolean success = bikeDAO.deleteBike(bike.getId());
+            boolean success = bike.deleteFromDatabase();
             
             if (success) {
                 JOptionPane.showMessageDialog(this,

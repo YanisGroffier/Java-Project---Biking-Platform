@@ -1,9 +1,13 @@
 package be.groffier.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import be.groffier.dao.BikeDAO;
 
-public class Bike {
+public class Bike implements Serializable{
+
+	private static final long serialVersionUID = 781546991745771122L;
 	private static int ID = 0;
 	private int id;
 	private String name;
@@ -15,6 +19,7 @@ public class Bike {
 	private List<Inscription> inscriptions;
 	private Vehicle vehicle;
 	
+	public Bike() {}
 	public Bike(String type, double weight, double length, 
 				Member member, Vehicle vehicle) {
 		setId(ID++);
@@ -50,4 +55,19 @@ public class Bike {
     
     public Vehicle getVehicle() { return vehicle; }
     public void setVehicle(Vehicle value) { vehicle = value; }
+    
+    public boolean saveToDatabase(int memberId) {
+        BikeDAO bikeDAO = new BikeDAO();
+        return bikeDAO.addBike(memberId, this.name, (int)this.length, this.weight, this.type);
+    }
+    
+    public boolean deleteFromDatabase() {
+        BikeDAO bikeDAO = new BikeDAO();
+        return bikeDAO.deleteBike(this.id);
+    }
+    
+    public static List<Bike> loadByMemberId(int memberId) {
+        BikeDAO bikeDAO = new BikeDAO();
+        return bikeDAO.getBikesByMember(memberId);
+    }
 }

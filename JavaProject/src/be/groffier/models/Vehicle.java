@@ -1,9 +1,13 @@
 package be.groffier.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import be.groffier.dao.VehicleDAO;
 
-public class Vehicle {
+public class Vehicle implements Serializable {
+
+	private static final long serialVersionUID = 5768923944778913194L;
 	private static int ID = 0;
 	private int id;
 	private int seatNumber;
@@ -14,6 +18,7 @@ public class Vehicle {
 	private List<Bike> bikes;
 	private List<Ride> rides;
 	
+	public Vehicle() {}
 	public Vehicle(int seatNumber, int bikeSpotNumber, 
 				   Member driver, Ride ride) {
 		setId(ID++);
@@ -24,8 +29,7 @@ public class Vehicle {
 		setPassengers(new ArrayList<Member>());
 		setBikes(new ArrayList<Bike>());
 		setRides(new ArrayList<Ride>());
-		addRide(ride);
-		
+		if (ride != null) addRide(ride);
 	}
 	
     public int getId() { return id; }
@@ -40,8 +44,8 @@ public class Vehicle {
     public Member getDriver() { return driver; }
     private void setDriver(Member value) { driver = value; }
     
-    public List<Member> getPassengers() {return passengers; }
-    private void setPassengers(List<Member> value) {passengers = value;}
+    public List<Member> getPassengers() { return passengers; }
+    private void setPassengers(List<Member> value) { passengers = value; }
     
     public List<Bike> getBikes() { return bikes; }
     private void setBikes(List<Bike> value) { bikes = value; }
@@ -49,20 +53,33 @@ public class Vehicle {
     public List<Ride> getRides() { return rides; }
     private void setRides(List<Ride> value) { rides = value; }
     
-    
 	public boolean addPassenger(Member p) {
-		if (passengers.contains(p)) {return false;}
-		else {passengers.add(p); return true;}
+		if (passengers.contains(p)) { return false; }
+		else { passengers.add(p); return true; }
 	}
 
 	public boolean addBike(Bike b) {
-		if (bikes.contains(b)) {return false;}
-		else {bikes.add(b); return true;}
+		if (bikes.contains(b)) { return false; }
+		else { bikes.add(b); return true; }
 	}
 	
 	public boolean addRide(Ride r) {
-		if (rides.contains(r)) {return false;}
-		else {rides.add(r); return true;}
+		if (rides.contains(r)) { return false; }
+		else { rides.add(r); return true; }
 	}
-
+	
+	public boolean saveToDatabase(int memberId) {
+		VehicleDAO vehicleDAO = new VehicleDAO();
+		return vehicleDAO.addVehicle(memberId, this.seatNumber, this.bikeSpotNumber);
+	}
+	
+	public boolean deleteFromDatabase() {
+		VehicleDAO vehicleDAO = new VehicleDAO();
+		return vehicleDAO.deleteVehicle(this.id);
+	}
+	
+	public static List<Vehicle> loadByMemberId(int memberId) {
+		VehicleDAO vehicleDAO = new VehicleDAO();
+		return vehicleDAO.getAllVehicles(memberId);
+	}
 }

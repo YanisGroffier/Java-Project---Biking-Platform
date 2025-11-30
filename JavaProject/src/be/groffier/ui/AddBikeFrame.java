@@ -1,4 +1,4 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import be.groffier.models.Member;
-import be.groffier.dao.BikeDAO;
+import be.groffier.models.Bike;
 
 public class AddBikeFrame extends JFrame {
 
@@ -117,8 +117,9 @@ public class AddBikeFrame extends JFrame {
                 return;
             }
 
-            BikeDAO bikeDAO = new BikeDAO();
-            boolean success = bikeDAO.addBike(member.getId(), name, length, weight, type);
+            Bike bike = new Bike(type, weight, length, member, null);
+            bike.setName(name);
+            boolean success = bike.saveToDatabase(member.getId());
 
             if (success) {
                 JOptionPane.showMessageDialog(this,

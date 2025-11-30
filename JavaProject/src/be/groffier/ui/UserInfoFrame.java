@@ -1,4 +1,4 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -124,9 +124,9 @@ public class UserInfoFrame extends JFrame {
     
     private String getRoleLabel() {
         if (user instanceof Treasurer) return "Trésorier";
-         else if (user instanceof Manager) return "Manager";
-         else if (user instanceof Member) return "Membre";
-         else return "Inconnu";
+        else if (user instanceof Manager) return "Manager";
+        else if (user instanceof Member) return "Membre";
+        else return "Inconnu";
     }
     
     private Color getRoleColor() {

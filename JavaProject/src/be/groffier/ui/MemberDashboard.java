@@ -1,4 +1,4 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,8 +14,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 import be.groffier.models.Member;
-import be.groffier.dao.CategoryMemberDAO;
-import be.groffier.dao.PersonDAO;
 
 public class MemberDashboard extends JFrame {
 
@@ -80,9 +78,6 @@ public class MemberDashboard extends JFrame {
         });
         contentPane.add(btnCategories);
         
-        
-        
-        //Partie événements et inscriptions
         JPanel eventsPanel = new JPanel();
         eventsPanel.setBackground(new Color(240, 240, 240));
         eventsPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
@@ -135,9 +130,6 @@ public class MemberDashboard extends JFrame {
         });
         eventsPanel.add(btnMyInscriptionsDriver);
 
-
-
-        //Partie paiements
         JPanel paymentPanel = new JPanel();
         paymentPanel.setBackground(new Color(240, 240, 240));
         paymentPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
@@ -185,9 +177,6 @@ public class MemberDashboard extends JFrame {
         btnPaySubscriptionFee.setBounds(10, 180, 390, 40);
         paymentPanel.add(btnPaySubscriptionFee);
         
-        
-        
-        //Partie vélos
         JPanel bikesPanel = new JPanel();
         bikesPanel.setBackground(new Color(240, 240, 240));
         bikesPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
@@ -220,9 +209,6 @@ public class MemberDashboard extends JFrame {
         btnAddBike.setBounds(205, 55, 195, 35);
         bikesPanel.add(btnAddBike);
         
-        
-        
-        //Partie véhicules
         JPanel vehiclesPanel = new JPanel();
         vehiclesPanel.setBackground(new Color(240, 240, 240));
         vehiclesPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
@@ -292,12 +278,9 @@ public class MemberDashboard extends JFrame {
                 JOptionPane.YES_NO_OPTION);
             
             if (confirm == JOptionPane.YES_OPTION) {
-                PersonDAO personDAO = new PersonDAO();
-                boolean success = personDAO.updateBalance(member.getId(), amount);
+                boolean success = member.addFunds(amount);
                 
                 if (success) {
-                    member.setBalance(member.getBalance() + amount);
-                    
                     JOptionPane.showMessageDialog(this, 
                         "Ajout de " + String.format("%.2f €", amount) + " effectué avec succès.\n" +
                         "Nouveau solde : " + String.format("%.2f €", member.getBalance()), 
@@ -322,69 +305,59 @@ public class MemberDashboard extends JFrame {
         }
     }
     
-	private void handleFeePayment() {
-		PersonDAO personDAO = new PersonDAO();
-	    double subscriptionFee = personDAO.getFeeAmount(member.getId());
-	    String message;
-	    
-	    if (subscriptionFee == 20) {
-	        message = "Confirmer le paiement de la cotisation de " + String.format("%.2f €", subscriptionFee) + " ?\n" +
-	                  "Votre solde actuel : " + String.format("%.2f €", member.getBalance());
-	    } else {
-	        message = "Confirmer le paiement de la cotisation de " + String.format("%.2f €", subscriptionFee) + " ?\n" +
-	                  "Votre solde actuel : " + String.format("%.2f €", member.getBalance());
-	    }
-	    
-	    int confirm = JOptionPane.showConfirmDialog(this, 
-	        message,
-	        "Confirmation de paiement", 
-	        JOptionPane.YES_NO_OPTION,
-	        JOptionPane.QUESTION_MESSAGE);
-	    
-	    if (confirm == JOptionPane.YES_OPTION) {
-	        if (member.getBalance() >= subscriptionFee) {
-	            boolean success = personDAO.payFee(member.getId(), subscriptionFee);
-	            
-	            if (success) {
-	                member.setBalance(member.getBalance() - subscriptionFee);
-	                
-	                LocalDate dateExpiration = LocalDate.now().plusYears(1);
-	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private void handleFeePayment() {
+        double subscriptionFee = member.calculateFeeAmount();
+        String message = "Confirmer le paiement de la cotisation de " + String.format("%.2f €", subscriptionFee) + " ?\n" +
+                      "Votre solde actuel : " + String.format("%.2f €", member.getBalance());
+        
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            message,
+            "Confirmation de paiement", 
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (member.hasSufficientBalance(subscriptionFee)) {
+                boolean success = member.paySubscriptionFee();
+                
+                if (success) {
+                    LocalDate dateExpiration = LocalDate.now().plusYears(1);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-	                JOptionPane.showMessageDialog(this,
-	                    "Paiement des cotisations effectué avec succès.\n" +
-	                    "Abonnement valide jusqu'au " + dateExpiration.format(formatter) + "\n" +
-	                    "Montant payé : " + String.format("%.2f €", subscriptionFee) + "\n" +
-	                    "Nouveau solde : " + String.format("%.2f €", member.getBalance()),
-	                    "Succès",
-	                    JOptionPane.INFORMATION_MESSAGE);	                
-	                refreshDashboard();
-	            } else {
-	                JOptionPane.showMessageDialog(this, 
-	                    "Erreur lors du paiement. Veuillez réessayer.", 
-	                    "Erreur", 
-	                    JOptionPane.ERROR_MESSAGE);
-	            }
-	        } else {
-	            JOptionPane.showMessageDialog(this, 
-	                "Solde insuffisant pour effectuer ce paiement.\n" +
-	                "Solde actuel : " + String.format("%.2f €", member.getBalance()) + "\n" +
-	                "Montant requis : " + String.format("%.2f €", subscriptionFee),
-	                "Solde insuffisant", 
-	                JOptionPane.WARNING_MESSAGE);
-	        }
-	    }
-	}
+                    JOptionPane.showMessageDialog(this,
+                        "Paiement des cotisations effectué avec succès.\n" +
+                        "Abonnement valide jusqu'au " + dateExpiration.format(formatter) + "\n" +
+                        "Montant payé : " + String.format("%.2f €", subscriptionFee) + "\n" +
+                        "Nouveau solde : " + String.format("%.2f €", member.getBalance()),
+                        "Succès",
+                        JOptionPane.INFORMATION_MESSAGE);	                
+                    refreshDashboard();
+                } else {
+                    JOptionPane.showMessageDialog(this, 
+                        "Erreur lors du paiement. Veuillez réessayer.", 
+                        "Erreur", 
+                        JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, 
+                    "Solde insuffisant pour effectuer ce paiement.\n" +
+                    "Solde actuel : " + String.format("%.2f €", member.getBalance()) + "\n" +
+                    "Montant requis : " + String.format("%.2f €", subscriptionFee),
+                    "Solde insuffisant", 
+                    JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }
 
-	private void handleLogout() {
+    private void handleLogout() {
         mainFrame.onLogout();
         this.dispose();
     }
-	
-	private void openCategoriesCatalog() {
-		CategoriesCatalogFrame categoryCatalogFrame = new CategoriesCatalogFrame(member);
-		categoryCatalogFrame.setVisible(true);
-	}
+    
+    private void openCategoriesCatalog() {
+        CategoriesCatalogFrame categoryCatalogFrame = new CategoriesCatalogFrame(member);
+        categoryCatalogFrame.setVisible(true);
+    }
     
     private void openBikesList() {
         BikesListFrame bikesListFrame = new BikesListFrame(member);

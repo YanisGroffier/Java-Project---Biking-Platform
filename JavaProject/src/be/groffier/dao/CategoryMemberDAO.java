@@ -8,8 +8,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.groffier.database.DBConnection;
+import be.groffier.models.Category;
 
-public class CategoryMemberDAO {
+public class CategoryMemberDAO extends DAO<Category>{
+	
+	@Override
+	public boolean create(Category obj) {
+		return false;
+	}
+
+	@Override
+	public boolean delete(Category obj) {
+		return false;
+	}
+
+	@Override
+	public boolean update(Category obj) {
+		return false;
+	}
+
+	@Override
+	public Category find(int id) {
+		return null;
+	}
 
     public boolean isMemberInCategory(int memberId, int categoryId) {
         Connection conn = DBConnection.getConnection();

@@ -10,8 +10,29 @@ import be.groffier.database.DBConnection;
 import be.groffier.models.Calendar;
 import be.groffier.models.Ride;
 
-public class CalendarDAO{
-    
+public class CalendarDAO extends DAO<Calendar>{
+	
+	public CalendarDAO() {}
+	
+	@Override
+	public boolean create(Calendar obj) {
+		return false;
+	}
+
+	@Override
+	public boolean delete(Calendar obj) {
+		return false;
+	}
+
+	@Override
+	public boolean update(Calendar obj) {
+		return false;
+	}
+
+	@Override
+	public Calendar find(int id) {
+		return null;
+	}
     public Calendar getCalendar() {
         Calendar calendar = new Calendar();
         RideDAO rideDAO = new RideDAO();

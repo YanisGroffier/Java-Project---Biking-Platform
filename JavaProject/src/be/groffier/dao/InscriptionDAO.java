@@ -5,17 +5,37 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import be.groffier.database.DBConnection;
+import be.groffier.models.Inscription;
 import be.groffier.models.Member;
 import be.groffier.models.Ride;
-import be.groffier.models.Bike;
-import be.groffier.models.Inscription;
 
-public class InscriptionDAO {
+public class InscriptionDAO extends DAO<Inscription>{
 
+	public InscriptionDAO() {}
+	
+	@Override
+	public boolean create(Inscription obj) {
+		return false;
+	}
+
+	@Override
+	public boolean delete(Inscription obj) {
+		return false;
+	}
+
+	@Override
+	public boolean update(Inscription obj) {
+		return false;
+	}
+
+	@Override
+	public Inscription find(int id) {
+		return null;
+	}
+	
     public boolean createInscription(Member member, Ride ride, boolean isPassenger, boolean hasBike) {
         String sql = "INSERT INTO inscription (personID, rideID, passenger, bike) VALUES (?, ?, ?, ?)";
 

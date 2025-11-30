@@ -1,4 +1,4 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -12,7 +12,6 @@ import java.util.Date;
 import be.groffier.models.Category;
 import be.groffier.models.Manager;
 import be.groffier.models.Ride;
-import be.groffier.dao.RideDAO;
 
 public class CreateRideFrame extends JFrame {
 
@@ -126,7 +125,6 @@ public class CreateRideFrame extends JFrame {
             }
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            //dateFormat.setLenient(false); //Utile?
             Date startDate = dateFormat.parse(dateStr);
 
             double fee = Double.parseDouble(feeStr);
@@ -140,9 +138,7 @@ public class CreateRideFrame extends JFrame {
             }
 
             Ride ride = new Ride(name, startPlace, startDate, fee);
-            
-            RideDAO rideDAO = new RideDAO();
-            boolean success = rideDAO.createRide(ride, category);
+            boolean success = ride.saveToDatabase(category);
 
             if (success) {
                 JOptionPane.showMessageDialog(this,

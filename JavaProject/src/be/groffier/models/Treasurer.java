@@ -1,7 +1,13 @@
 package be.groffier.models;
 
-public class Treasurer extends Person {
-    public Treasurer(String name, String firstname, String tel, String password) {
+import java.io.Serializable;
+
+public class Treasurer extends Person implements Serializable{
+
+	private static final long serialVersionUID = 2652803221877918003L;
+	
+	public Treasurer() {}
+	public Treasurer(String name, String firstname, String tel, String password) {
         super(name, firstname, tel, password);
     }
 

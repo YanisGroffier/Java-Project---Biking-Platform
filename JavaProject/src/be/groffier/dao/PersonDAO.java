@@ -16,8 +16,30 @@ import be.groffier.models.Treasurer;
 import be.groffier.models.Category;
 import be.groffier.models.CategoryEnum;
 
-public class PersonDAO {
+public class PersonDAO extends DAO<Person>{
+	
+	public PersonDAO() {}
    
+	@Override
+	public boolean create(Person obj) {
+		return false;
+	}
+
+	@Override
+	public boolean delete(Person obj) {
+		return false;
+	}
+
+	@Override
+	public boolean update(Person obj) {
+		return false;
+	}
+
+	@Override
+	public Person find(int id) {
+		return null;
+	}
+	
     public Person authenticate(String name, String password) {
         Connection conn = DBConnection.getConnection();
         if (conn == null) {

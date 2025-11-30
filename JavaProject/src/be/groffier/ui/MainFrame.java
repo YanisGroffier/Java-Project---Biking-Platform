@@ -1,4 +1,4 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;

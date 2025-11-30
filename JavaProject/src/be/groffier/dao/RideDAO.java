@@ -7,12 +7,33 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import be.groffier.database.DBConnection;
-import be.groffier.models.Category;
 import be.groffier.models.Ride;
 
-public class RideDAO {
+public class RideDAO extends DAO<Ride>{
     
-    public List<Ride> getAllRides() {
+    public RideDAO() {}
+    
+	@Override
+	public boolean create(Ride obj) {
+		return false;
+	}
+
+	@Override
+	public boolean delete(Ride obj) {
+		return false;
+	}
+
+	@Override
+	public boolean update(Ride obj) {
+		return false;
+	}
+
+	@Override
+	public Ride find(int id) {
+		return null;
+	}
+
+	public List<Ride> getAllRides() {
         List<Ride> rides = new ArrayList<>();
         Connection conn = DBConnection.getConnection();
         if (conn == null) return rides;

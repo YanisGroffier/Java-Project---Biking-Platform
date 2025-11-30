@@ -1,10 +1,9 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.List;
-import be.groffier.dao.VehicleDAO;
 import be.groffier.models.Vehicle;
 import be.groffier.models.Member;
 
@@ -13,7 +12,6 @@ public class CarsListFrame extends JFrame {
     private static final long serialVersionUID = 1L;
     private Member member;
     private JPanel vehiclesContainer;
-    private VehicleDAO vehicleDAO = new VehicleDAO();
 
     public CarsListFrame(Member member) {
         this.member = member;
@@ -63,7 +61,7 @@ public class CarsListFrame extends JFrame {
     private void loadVehicles() {
         vehiclesContainer.removeAll();
 
-        List<Vehicle> vehicles = vehicleDAO.getAllVehicles(member.getId());
+        List<Vehicle> vehicles = Vehicle.loadByMemberId(member.getId());
 
         if (vehicles.isEmpty()) {
             JLabel lblEmpty = new JLabel("Aucun véhicule enregistré pour le moment");
@@ -144,7 +142,7 @@ public class CarsListFrame extends JFrame {
             );
 
             if (confirm == JOptionPane.YES_OPTION) {
-                boolean deleted = vehicleDAO.deleteVehicle(vehicle.getId());
+                boolean deleted = vehicle.deleteFromDatabase();
                 if (deleted) {
                     JOptionPane.showMessageDialog(this, "Véhicule supprimé !", "Succès", JOptionPane.INFORMATION_MESSAGE);
                     loadVehicles();

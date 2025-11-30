@@ -1,4 +1,4 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import java.awt.Font;
 import java.awt.Color;
@@ -17,7 +17,6 @@ import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import be.groffier.dao.PersonDAO;
 import be.groffier.models.Member;
 
 public class ManageMembersFrame extends JFrame {
@@ -26,11 +25,8 @@ public class ManageMembersFrame extends JFrame {
 	private JPanel contentPane;
 	private JTable tableMembres;
 	private DefaultTableModel tableModel;
-	private PersonDAO personDAO;
 
 	public ManageMembersFrame() {
-		personDAO = new PersonDAO();
-		
 		setTitle("Gestion des Membres");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 800, 500);
@@ -117,15 +113,12 @@ public class ManageMembersFrame extends JFrame {
 	private void loadMembers() {
 		tableModel.setRowCount(0);
 		
-		List<Member> members = personDAO.getAllMembersWithHistory();
+		List<Member> members = Member.loadAllWithHistory();
 		
 		for (Member member : members) {
 			Object[] row = {
 				member.getId(),
 				member.getName(),
-				//member.getFirstname(),
-				//member.getTel(),
-				//String.format("%.2f", member.getBalance()),
 				member.getLastPaymentDate()
 			};
 			tableModel.addRow(row);

@@ -10,9 +10,31 @@ import java.util.List;
 import be.groffier.database.DBConnection;
 import be.groffier.models.Vehicle;
 
-public class VehicleDAO {
+public class VehicleDAO extends DAO<Vehicle>{
 
-    public boolean addVehicle(int memberId, int seatNumber, int bikeSpotNumber) {
+    public VehicleDAO() {}
+    
+	@Override
+	public boolean create(Vehicle obj) {
+		return false;
+	}
+
+	@Override
+	public boolean delete(Vehicle obj) {
+		return false;
+	}
+
+	@Override
+	public boolean update(Vehicle obj) {
+		return false;
+	}
+
+	@Override
+	public Vehicle find(int id) {
+		return null;
+	}
+
+	public boolean addVehicle(int memberId, int seatNumber, int bikeSpotNumber) {
         String sql = "INSERT INTO vehicle (personID, seatNumber, bikeSpotNumber) VALUES (?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();

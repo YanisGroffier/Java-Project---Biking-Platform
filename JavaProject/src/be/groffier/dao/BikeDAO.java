@@ -9,10 +9,31 @@ import java.util.List;
 
 import be.groffier.database.DBConnection;
 import be.groffier.models.Bike;
-import be.groffier.models.Member;
 
-public class BikeDAO {
+public class BikeDAO extends DAO<Bike>{
 
+	public BikeDAO() {}
+	
+	@Override
+	public boolean create(Bike obj) {
+		return false;
+	}
+
+	@Override
+	public boolean delete(Bike obj) {
+		return false;
+	}
+
+	@Override
+	public boolean update(Bike obj) {
+		return false;
+	}
+
+	@Override
+	public Bike find(int id) {
+		return null;
+	}
+	
 	public boolean addBike(int memberId, String name, int length, double weight, String type) {
 		String sql = "INSERT INTO bike (personID, bikeName, length, weight, type) VALUES (?, ?, ?, ?, ?)";
 		

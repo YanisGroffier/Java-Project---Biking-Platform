@@ -1,4 +1,4 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -11,7 +11,6 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
-import be.groffier.dao.CategoryMemberDAO;
 import be.groffier.models.Member;
 import be.groffier.models.CategoryEnum;
 
@@ -20,11 +19,9 @@ public class CategoriesCatalogFrame extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private Member member;
-    private CategoryMemberDAO categoryMemberDAO;
 
     public CategoriesCatalogFrame(Member member) {
         this.member = member;
-        this.categoryMemberDAO = new CategoryMemberDAO();
         
         setTitle("Catalogue des Catégories");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -84,7 +81,7 @@ public class CategoriesCatalogFrame extends JFrame {
     }
 
     private void handleSubscription(int categoryId, String categoryName) {
-        if (categoryMemberDAO.isMemberInCategory(member.getId(), categoryId)) {
+        if (member.isInCategory(categoryId)) {
             JOptionPane.showMessageDialog(
                 this,
                 "Vous êtes déjà inscrit dans cette catégorie.",
@@ -103,7 +100,7 @@ public class CategoriesCatalogFrame extends JFrame {
         );
 
         if (confirm == JOptionPane.YES_OPTION) {
-            boolean success = categoryMemberDAO.addMemberToCategory(member.getId(), categoryId);
+            boolean success = member.subscribeToCategory(categoryId);
             
             if (success) {
                 JOptionPane.showMessageDialog(

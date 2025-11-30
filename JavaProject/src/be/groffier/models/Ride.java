@@ -1,8 +1,12 @@
 package be.groffier.models;
 
+import java.io.Serializable;
 import java.util.*;
+import be.groffier.dao.RideDAO;
 
-public class Ride {
+public class Ride implements Serializable{
+
+	private static final long serialVersionUID = -8713905867039068613L;
 	private static int ID = 0;
 	private int num;
 	private String name;
@@ -13,7 +17,7 @@ public class Ride {
 	private List<Inscription> inscriptions;
 	private List<Vehicle> vehicles;
 	
-	
+	public Ride() {}
 	public Ride(String name, String startPlace, Date startDate, double fee) {
 		setNum(ID++);
 		setName(name);
@@ -60,9 +64,39 @@ public class Ride {
 		return inscriptions.size();
 	}
 	
-	public int getAvailableSeatNumber() {return 0;} 	//TODO
-	public int getTotalBikeSpotNumber() {return 0;}		//TODO
-	public int getAvailableBikeSpotNumber() {return 0;}	//TODO
-	public int getNeededSeatNumber() {return 0;}		//TODO
-	public int getNeededBikeSpotNumber() {return 0;}	//TODO
+	public int getAvailableSeatNumber() {return 0;} 	
+	public int getTotalBikeSpotNumber() {return 0;}		
+	public int getAvailableBikeSpotNumber() {return 0;}	
+	public int getNeededSeatNumber() {return 0;}		
+	public int getNeededBikeSpotNumber() {return 0;}	
+	
+	public boolean saveToDatabase(int categoryId) {
+		RideDAO rideDAO = new RideDAO();
+		return rideDAO.createRide(this, categoryId);
+	}
+	
+	public boolean deleteFromDatabase() {
+		RideDAO rideDAO = new RideDAO();
+		return rideDAO.deleteRide(this.num);
+	}
+	
+	public static List<Ride> loadAll() {
+		RideDAO rideDAO = new RideDAO();
+		return rideDAO.getAllRides();
+	}
+	
+	public static List<Ride> loadUpcoming() {
+		RideDAO rideDAO = new RideDAO();
+		return rideDAO.getUpcomingRides();
+	}
+	
+	public static List<Ride> loadByCalendarId(int calendarId) {
+		RideDAO rideDAO = new RideDAO();
+		return rideDAO.getRidesByCalendarId(calendarId);
+	}
+	
+	public static Ride loadByNum(int num) {
+		RideDAO rideDAO = new RideDAO();
+		return rideDAO.getRideByNum(num);
+	}
 }

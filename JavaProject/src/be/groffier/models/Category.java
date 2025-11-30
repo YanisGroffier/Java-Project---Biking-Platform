@@ -1,16 +1,19 @@
 package be.groffier.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Category {
+public class Category implements Serializable{
+
+	private static final long serialVersionUID = 3780568525675869930L;
 	private int num;
-	
 	private Manager manager;
 	private CategoryEnum category;
 	private List<Member> members;
 	private Calendar calendar;
 	
+	public Category() {}
 	public Category(int id, Manager manager, CategoryEnum category, Calendar calendar) {
 		setNum(id);
 		

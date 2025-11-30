@@ -1,8 +1,13 @@
 package be.groffier.models;
 
-public class Manager extends Person{
+import java.io.Serializable;
+
+public class Manager extends Person implements Serializable{
+
+	private static final long serialVersionUID = 6213104686795809542L;
 	private Category category;
 
+	public Manager() {}
 	public Manager(String name, String firstname, String tel, String password, Category category) {
 		super(name, firstname, tel, password);
 		setCategory(category);

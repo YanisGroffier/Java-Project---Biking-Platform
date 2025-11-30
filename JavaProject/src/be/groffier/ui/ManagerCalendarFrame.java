@@ -1,32 +1,47 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import be.groffier.models.Member;
+import java.util.stream.Collectors;
 import be.groffier.models.Ride;
-import be.groffier.dao.InscriptionDAO;
+import be.groffier.models.Manager;
 
-public class MySubscriptionsFrame extends JFrame {
+public class ManagerCalendarFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private Member member;
-    private boolean isCyclist;
+    private Manager manager;
     private JPanel ridesListPanel;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    private boolean filterByCategory;
+    private Integer categoryFilter;
 
-    public MySubscriptionsFrame(Member member, boolean isCyclist) {
-        this.member = member;
-        this.isCyclist = isCyclist;
-        
+    public ManagerCalendarFrame(Manager manager) {
+        this(manager, false, null);
+    }
+    
+    /**
+     * @wbp.parser.constructor
+     */
+    public ManagerCalendarFrame(Manager manager, boolean filterByCategory, Integer categoryId) {
         setResizable(false);
-        setTitle(isCyclist ? "Mes inscriptions - Cycliste" : "Mes inscriptions - Conducteur");
+        setSize(460, 650);
+        this.manager = manager;
+        this.filterByCategory = filterByCategory;
+        this.categoryFilter = categoryId;
+        
+        String titleText = filterByCategory ? 
+            "Événements - " + manager.getCategory().toString() : 
+            "Tous les événements";
+        
+        setTitle(titleText);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 480, 650);
-        
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(20, 20, 20, 20));
         contentPane.setBackground(new Color(245, 245, 250));
@@ -39,14 +54,16 @@ public class MySubscriptionsFrame extends JFrame {
         headerPanel.setLayout(null);
         contentPane.add(headerPanel, BorderLayout.NORTH);
         
-        String title = isCyclist ? "Mes inscriptions - Cycliste" : "Mes inscriptions - Conducteur";
-        
-        JLabel lblTitle = new JLabel(title);
-        lblTitle.setFont(new Font("Tahoma", Font.BOLD, 20));
+        JLabel lblTitle = new JLabel(titleText);
+        lblTitle.setFont(new Font("Tahoma", Font.BOLD, 24));
         lblTitle.setBounds(0, 10, 400, 35);
         headerPanel.add(lblTitle);
         
-        JLabel lblSubtitle = new JLabel("Liste de vos sorties");
+        String subtitleText = filterByCategory ? 
+            "Sorties de votre catégorie" : 
+            "Vue d'ensemble des sorties";
+        
+        JLabel lblSubtitle = new JLabel(subtitleText);
         lblSubtitle.setFont(new Font("Tahoma", Font.PLAIN, 13));
         lblSubtitle.setForeground(new Color(100, 100, 100));
         lblSubtitle.setBounds(0, 45, 300, 25);
@@ -62,22 +79,49 @@ public class MySubscriptionsFrame extends JFrame {
         ridesListPanel.setLayout(new BoxLayout(ridesListPanel, BoxLayout.Y_AXIS));
         scrollPane.setViewportView(ridesListPanel);
         
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new GridLayout(2, 1, 0, 5));
+        bottomPanel.setBackground(new Color(245, 245, 250));
+        contentPane.add(bottomPanel, BorderLayout.SOUTH);
+        
         JButton btnRefresh = new JButton("Actualiser");
         btnRefresh.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        btnRefresh.addActionListener(e -> loadInscriptions());
-        contentPane.add(btnRefresh, BorderLayout.SOUTH);
+        btnRefresh.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                loadRides();
+            }
+        });
+        bottomPanel.add(btnRefresh);
         
-        loadInscriptions();
+        JButton btnCreateEvent = new JButton("Créer un événement");
+        btnCreateEvent.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnCreateEvent.setBackground(new Color(144, 238, 144));
+        btnCreateEvent.setForeground(Color.BLACK);
+        btnCreateEvent.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                openCreateRide();
+            }
+        });
+        bottomPanel.add(btnCreateEvent);
+        
+        loadRides();
         
         setLocationRelativeTo(null);
     }
     
-    private void loadInscriptions() {
-        InscriptionDAO inscriptionDAO = new InscriptionDAO();
-        List<Ride> rides;
+    private void openCreateRide() {
+        CreateRideFrame createRideFrame = new CreateRideFrame(manager);
+        createRideFrame.setVisible(true);
+    }
+    
+    private void loadRides() {
+        List<Ride> rides = Ride.loadAll();
         
-        if (isCyclist) rides = inscriptionDAO.getCyclistInscriptionsByMemberId(member.getId());
-        else rides = inscriptionDAO.getDriverInscriptionsByMemberId(member.getId());
+        if (filterByCategory && categoryFilter != null) {
+            rides = rides.stream()
+                .filter(ride -> ride.getNum() == categoryFilter)
+                .collect(Collectors.toList());
+        }
         
         displayRides(rides);
     }
@@ -86,11 +130,11 @@ public class MySubscriptionsFrame extends JFrame {
         ridesListPanel.removeAll();
         
         if (rides.isEmpty()) {
-            String message = isCyclist 
-                ? "Aucune inscription en tant que cycliste." 
-                : "Aucune inscription en tant que conducteur.";
+            String noRidesMessage = filterByCategory ? 
+                "Aucun événement disponible pour votre catégorie." :
+                "Aucun événement disponible pour le moment.";
             
-            JLabel lblNoRides = new JLabel(message);
+            JLabel lblNoRides = new JLabel(noRidesMessage);
             lblNoRides.setFont(new Font("Tahoma", Font.ITALIC, 14));
             lblNoRides.setForeground(Color.GRAY);
             lblNoRides.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -118,7 +162,7 @@ public class MySubscriptionsFrame extends JFrame {
         ));
 
         int panelWidth = 390;
-        int panelHeight = 180;
+        int panelHeight = 200;
 
         panel.setMaximumSize(new Dimension(panelWidth, panelHeight));
         panel.setPreferredSize(new Dimension(panelWidth, panelHeight));
@@ -168,17 +212,18 @@ public class MySubscriptionsFrame extends JFrame {
         lblFee.setBounds(95, 110, 100, 25);
         panel.add(lblFee);
 
-        String roleText = isCyclist ? "Cycliste" : "Conducteur";
-        Color roleColor = isCyclist ? new Color(34, 139, 34) : new Color(70, 130, 180);
-        
-        JLabel lblRole = new JLabel(roleText);
-        lblRole.setFont(new Font("Tahoma", Font.BOLD, 12));
-        lblRole.setForeground(Color.WHITE);
-        lblRole.setOpaque(true);
-        lblRole.setBackground(roleColor);
-        lblRole.setHorizontalAlignment(JLabel.CENTER);
-        lblRole.setBounds(250, 110, 130, 30);
-        panel.add(lblRole);
+        JLabel lblInscriptionsLabel = new JLabel("Inscrits:");
+        lblInscriptionsLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
+        lblInscriptionsLabel.setForeground(new Color(80, 80, 80));
+        lblInscriptionsLabel.setBounds(10, 140, 100, 25);
+        panel.add(lblInscriptionsLabel);
+
+        int inscriptionCount = ride.getTotalInscriptionNumber();
+        JLabel lblInscriptions = new JLabel(inscriptionCount + " personne(s)");
+        lblInscriptions.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        lblInscriptions.setForeground(new Color(100, 100, 100));
+        lblInscriptions.setBounds(95, 140, 150, 25);
+        panel.add(lblInscriptions);
 
         return panel;
     }

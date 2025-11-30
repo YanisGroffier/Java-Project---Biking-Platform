@@ -1,50 +1,32 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.stream.Collectors;
+import be.groffier.models.Member;
 import be.groffier.models.Ride;
-import be.groffier.models.Manager;
-import be.groffier.dao.RideDAO;
+import be.groffier.models.Inscription;
 
-public class ManagerCalendarFrame extends JFrame {
+public class MySubscriptionsFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private Manager manager;
+    private Member member;
+    private boolean isCyclist;
     private JPanel ridesListPanel;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-    private boolean filterByCategory;
-    private Integer categoryFilter;
 
-    // Constructeur existant (tous les événements)
-    public ManagerCalendarFrame(Manager manager) {
-        this(manager, false, null);
-    }
-    
-    /**
-     * @wbp.parser.constructor
-     */
-    // Nouveau constructeur avec filtre par catégorie
-    public ManagerCalendarFrame(Manager manager, boolean filterByCategory, Integer categoryId) {
+    public MySubscriptionsFrame(Member member, boolean isCyclist) {
+        this.member = member;
+        this.isCyclist = isCyclist;
+        
         setResizable(false);
-        setSize(460, 650);
-        this.manager = manager;
-        this.filterByCategory = filterByCategory;
-        this.categoryFilter = categoryId;
-        
-        String titleText = filterByCategory ? 
-            "Événements - " + manager.getCategory().toString() : 
-            "Tous les événements";
-        
-        setTitle(titleText);
+        setTitle(isCyclist ? "Mes inscriptions - Cycliste" : "Mes inscriptions - Conducteur");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 480, 650);
+        
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(20, 20, 20, 20));
         contentPane.setBackground(new Color(245, 245, 250));
@@ -57,16 +39,14 @@ public class ManagerCalendarFrame extends JFrame {
         headerPanel.setLayout(null);
         contentPane.add(headerPanel, BorderLayout.NORTH);
         
-        JLabel lblTitle = new JLabel(titleText);
-        lblTitle.setFont(new Font("Tahoma", Font.BOLD, 24));
+        String title = isCyclist ? "Mes inscriptions - Cycliste" : "Mes inscriptions - Conducteur";
+        
+        JLabel lblTitle = new JLabel(title);
+        lblTitle.setFont(new Font("Tahoma", Font.BOLD, 20));
         lblTitle.setBounds(0, 10, 400, 35);
         headerPanel.add(lblTitle);
         
-        String subtitleText = filterByCategory ? 
-            "Sorties de votre catégorie" : 
-            "Vue d'ensemble des sorties";
-        
-        JLabel lblSubtitle = new JLabel(subtitleText);
+        JLabel lblSubtitle = new JLabel("Liste de vos sorties");
         lblSubtitle.setFont(new Font("Tahoma", Font.PLAIN, 13));
         lblSubtitle.setForeground(new Color(100, 100, 100));
         lblSubtitle.setBounds(0, 45, 300, 25);
@@ -82,51 +62,23 @@ public class ManagerCalendarFrame extends JFrame {
         ridesListPanel.setLayout(new BoxLayout(ridesListPanel, BoxLayout.Y_AXIS));
         scrollPane.setViewportView(ridesListPanel);
         
-        // Panel pour les boutons en bas
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.setLayout(new GridLayout(2, 1, 0, 5));
-        bottomPanel.setBackground(new Color(245, 245, 250));
-        contentPane.add(bottomPanel, BorderLayout.SOUTH);
-        
         JButton btnRefresh = new JButton("Actualiser");
         btnRefresh.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        btnRefresh.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                loadRides();
-            }
-        });
-        bottomPanel.add(btnRefresh);
+        btnRefresh.addActionListener(e -> loadInscriptions());
+        contentPane.add(btnRefresh, BorderLayout.SOUTH);
         
-        JButton btnCreateEvent = new JButton("Créer un événement");
-        btnCreateEvent.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnCreateEvent.setBackground(new Color(144, 238, 144));
-        btnCreateEvent.setForeground(Color.BLACK);
-        btnCreateEvent.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                openCreateRide();
-            }
-        });
-        bottomPanel.add(btnCreateEvent);
-        
-        loadRides();
+        loadInscriptions();
         
         setLocationRelativeTo(null);
     }
     
-    private void openCreateRide() {
-        CreateRideFrame createRideFrame = new CreateRideFrame(manager);
-        createRideFrame.setVisible(true);
-    }
-    
-    private void loadRides() {
-        RideDAO rideDAO = new RideDAO();
-        List<Ride> rides = rideDAO.getAllRides();
+    private void loadInscriptions() {
+        List<Ride> rides;
         
-        // Filtrer par catégorie si nécessaire
-        if (filterByCategory && categoryFilter != null) {
-            rides = rides.stream()
-                .filter(ride -> ride.getNum() == categoryFilter)
-                .collect(Collectors.toList());
+        if (isCyclist) {
+            rides = Inscription.loadCyclistInscriptionsByMemberId(member.getId());
+        } else {
+            rides = Inscription.loadDriverInscriptionsByMemberId(member.getId());
         }
         
         displayRides(rides);
@@ -136,11 +88,11 @@ public class ManagerCalendarFrame extends JFrame {
         ridesListPanel.removeAll();
         
         if (rides.isEmpty()) {
-            String noRidesMessage = filterByCategory ? 
-                "Aucun événement disponible pour votre catégorie." :
-                "Aucun événement disponible pour le moment.";
+            String message = isCyclist 
+                ? "Aucune inscription en tant que cycliste." 
+                : "Aucune inscription en tant que conducteur.";
             
-            JLabel lblNoRides = new JLabel(noRidesMessage);
+            JLabel lblNoRides = new JLabel(message);
             lblNoRides.setFont(new Font("Tahoma", Font.ITALIC, 14));
             lblNoRides.setForeground(Color.GRAY);
             lblNoRides.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -168,7 +120,7 @@ public class ManagerCalendarFrame extends JFrame {
         ));
 
         int panelWidth = 390;
-        int panelHeight = 200;
+        int panelHeight = 180;
 
         panel.setMaximumSize(new Dimension(panelWidth, panelHeight));
         panel.setPreferredSize(new Dimension(panelWidth, panelHeight));
@@ -218,18 +170,17 @@ public class ManagerCalendarFrame extends JFrame {
         lblFee.setBounds(95, 110, 100, 25);
         panel.add(lblFee);
 
-        JLabel lblInscriptionsLabel = new JLabel("Inscrits:");
-        lblInscriptionsLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
-        lblInscriptionsLabel.setForeground(new Color(80, 80, 80));
-        lblInscriptionsLabel.setBounds(10, 140, 100, 25);
-        panel.add(lblInscriptionsLabel);
-
-        int inscriptionCount = ride.getTotalInscriptionNumber();
-        JLabel lblInscriptions = new JLabel(inscriptionCount + " personne(s)");
-        lblInscriptions.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        lblInscriptions.setForeground(new Color(100, 100, 100));
-        lblInscriptions.setBounds(95, 140, 150, 25);
-        panel.add(lblInscriptions);
+        String roleText = isCyclist ? "Cycliste" : "Conducteur";
+        Color roleColor = isCyclist ? new Color(34, 139, 34) : new Color(70, 130, 180);
+        
+        JLabel lblRole = new JLabel(roleText);
+        lblRole.setFont(new Font("Tahoma", Font.BOLD, 12));
+        lblRole.setForeground(Color.WHITE);
+        lblRole.setOpaque(true);
+        lblRole.setBackground(roleColor);
+        lblRole.setHorizontalAlignment(JLabel.CENTER);
+        lblRole.setBounds(250, 110, 130, 30);
+        panel.add(lblRole);
 
         return panel;
     }

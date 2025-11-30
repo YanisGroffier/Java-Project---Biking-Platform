@@ -1,16 +1,14 @@
-package be.groffier.uitest;
+package be.groffier.ui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.List;
-import be.groffier.dao.BikeDAO;
-import be.groffier.dao.InscriptionDAO;
-import be.groffier.dao.VehicleDAO;
 import be.groffier.models.Bike;
 import be.groffier.models.Vehicle;
 import be.groffier.models.Member;
 import be.groffier.models.Ride;
+import be.groffier.models.Inscription;
 
 public class SubscriptionFrame extends JFrame {
 
@@ -20,9 +18,6 @@ public class SubscriptionFrame extends JFrame {
     private JComboBox<String> comboRole;
     private JComboBox<Bike> comboBike;
     private JComboBox<Vehicle> comboVehicle;
-
-    private BikeDAO bikeDAO = new BikeDAO();
-    private VehicleDAO vehicleDAO = new VehicleDAO();
 
     public SubscriptionFrame(JFrame parent, Ride ride, Member member) {
         this.member = member;
@@ -107,17 +102,15 @@ public class SubscriptionFrame extends JFrame {
             comboVehicle.setEnabled(isDriver);
 
             if (!isDriver) comboVehicle.setSelectedItem(null);
-            
         });
 
-        // Par défaut j'affiche le cycliste
         comboRole.setSelectedIndex(0);
         comboVehicle.setEnabled(false);
         comboBike.setEnabled(true);
     }
 
     private void loadBikesAndVehicles() {
-        List<Bike> bikes = bikeDAO.getBikesByMember(member.getId());
+        List<Bike> bikes = Bike.loadByMemberId(member.getId());
         comboBike.removeAllItems();
         if (bikes.isEmpty()) {
             comboBike.addItem(null);
@@ -143,7 +136,7 @@ public class SubscriptionFrame extends JFrame {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Bike) {
                     Bike b = (Bike) value;
-                    setText(b.getType() + " – " + b.getWeight() + " kg");
+                    setText(b.getType() + " • " + b.getWeight() + " kg");
                 } else if (value == null) {
                     setText("Aucun vélo");
                 }
@@ -151,7 +144,7 @@ public class SubscriptionFrame extends JFrame {
             }
         });
 
-        List<Vehicle> vehicles = vehicleDAO.getAllVehicles(member.getId());
+        List<Vehicle> vehicles = Vehicle.loadByMemberId(member.getId());
         comboVehicle.removeAllItems();
         if (vehicles.isEmpty()) {
             comboVehicle.addItem(null);
@@ -206,19 +199,14 @@ public class SubscriptionFrame extends JFrame {
             return;
         }
 
-        InscriptionDAO inscriptionDAO = new InscriptionDAO();
-        if (inscriptionDAO.isAlreadyRegistered(member.getId(), ride.getNum())) {
+        if (Inscription.isAlreadyRegistered(member.getId(), ride.getNum())) {
             JOptionPane.showMessageDialog(this, "Vous êtes déjà inscrit à cette sortie !", 
                 "Déjà inscrit", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        boolean success = inscriptionDAO.createInscription(
-            member,
-            ride,
-            isPassenger,
-            hasBike
-        );
+        Inscription inscription = new Inscription(isPassenger, hasBike, member, selectedBike, ride);
+        boolean success = inscription.saveToDatabase();
 
         if (success) {
             String recap = "<html><b>Inscription confirmée !</b><br><br>" +
