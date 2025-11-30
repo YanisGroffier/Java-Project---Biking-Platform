@@ -219,4 +219,25 @@ public class InscriptionDAO extends DAO<Inscription>{
 
         return rides;
     }
+    
+    public int getAmountOfAttendees(int rideId) {
+        String sql = "SELECT COUNT(*) FROM inscription WHERE rideID = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, rideId);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Erreur lors du comptage des inscrits pour la sortie #" + rideId);
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
 }

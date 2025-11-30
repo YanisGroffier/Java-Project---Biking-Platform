@@ -76,10 +76,6 @@ public class Member extends Person implements Serializable{
 	public void calculateBalance(double amount) {
 		setBalance(balance + amount);
 	}
-
-	public double checkBalance() {
-		return getBalance();
-	}
 	
 	public boolean addFunds(double amount) {
 		if (amount <= 0) {
@@ -123,26 +119,6 @@ public class Member extends Person implements Serializable{
 		return this.balance >= amount;
 	}
 	
-	public void loadCategories() {
-		PersonDAO personDAO = new PersonDAO();
-		List<Integer> categoryIds = personDAO.getMemberCategories(this.getId());
-	}
-	
-	public int getNumberOfCategories() {
-		PersonDAO personDAO = new PersonDAO();
-		return personDAO.getNumberOfCategories(this.getId());
-	}
-	
-	public boolean updateInDatabase() {
-		PersonDAO personDAO = new PersonDAO();
-		return personDAO.updatePerson(this);
-	}
-	
-	public void refreshBalance() {
-		PersonDAO personDAO = new PersonDAO();
-		this.balance = personDAO.getMemberBalance(this.getId());
-	}
-	
 	public boolean isInCategory(int categoryId) {
 		CategoryMemberDAO categoryMemberDAO = new CategoryMemberDAO();
 		return categoryMemberDAO.isMemberInCategory(this.getId(), categoryId);
@@ -151,21 +127,6 @@ public class Member extends Person implements Serializable{
 	public boolean subscribeToCategory(int categoryId) {
 		CategoryMemberDAO categoryMemberDAO = new CategoryMemberDAO();
 		return categoryMemberDAO.addMemberToCategory(this.getId(), categoryId);
-	}
-	
-	public boolean unsubscribeFromCategory(int categoryId) {
-		CategoryMemberDAO categoryMemberDAO = new CategoryMemberDAO();
-		return categoryMemberDAO.removeMemberFromCategory(this.getId(), categoryId);
-	}
-	
-	public static List<Integer> getMembersInCategory(int categoryId) {
-		CategoryMemberDAO categoryMemberDAO = new CategoryMemberDAO();
-		return categoryMemberDAO.getCategoryMembers(categoryId);
-	}
-	
-	public static int countMembersInCategory(int categoryId) {
-		CategoryMemberDAO categoryMemberDAO = new CategoryMemberDAO();
-		return categoryMemberDAO.countMembersInCategory(categoryId);
 	}
 	
 	public static List<Member> loadAllWithHistory() {

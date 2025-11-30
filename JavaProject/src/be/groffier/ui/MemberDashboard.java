@@ -24,6 +24,7 @@ public class MemberDashboard extends JFrame {
     private JLabel lblBalance;
 
     public MemberDashboard(MainFrame mainFrame, Member member) {
+    	setResizable(false);
         this.mainFrame = mainFrame;
         this.member = member;
         

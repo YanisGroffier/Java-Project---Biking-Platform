@@ -51,21 +51,11 @@ public class Inscription implements Serializable{
         return inscriptionDAO.createInscription(this.member, this.ride, this.isPassenger, this.isBike);
     }
     
-    public boolean deleteFromDatabase() {
-        InscriptionDAO inscriptionDAO = new InscriptionDAO();
-        return inscriptionDAO.deleteInscription(this.member.getId(), this.ride.getNum());
-    }
-    
     public static boolean isAlreadyRegistered(int memberId, int rideId) {
         InscriptionDAO inscriptionDAO = new InscriptionDAO();
         return inscriptionDAO.isAlreadyRegistered(memberId, rideId);
     }
-    
-    public static List<Ride> loadAllByMemberId(int memberId) {
-        InscriptionDAO inscriptionDAO = new InscriptionDAO();
-        return inscriptionDAO.getAllInscriptionsByMemberId(memberId);
-    }
-    
+        
     public static List<Ride> loadCyclistInscriptionsByMemberId(int memberId) {
         InscriptionDAO inscriptionDAO = new InscriptionDAO();
         return inscriptionDAO.getCyclistInscriptionsByMemberId(memberId);
