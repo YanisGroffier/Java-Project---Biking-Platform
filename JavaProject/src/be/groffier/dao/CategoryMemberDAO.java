@@ -69,40 +69,6 @@ public class CategoryMemberDAO {
         return false;
     }
 
-    public List<Integer> getMemberCategories(int memberId) {
-        List<Integer> categories = new ArrayList<>();
-        Connection conn = DBConnection.getConnection();
-        if (conn == null) {
-            return categories;
-        }
-
-        String query = "SELECT categoryID FROM CategoryMember WHERE memberID = ? ORDER BY categoryID";
-
-        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, memberId);
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                categories.add(rs.getInt("categoryID"));
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la récupération des catégories du membre!");
-            e.printStackTrace();
-        }
-
-        return categories;
-    }
-    
-    public int getNumberOfCategories(int memberId) {
-    	return getMemberCategories(memberId).size();
-    }
-    
-    public double getFeeAmount(int memberId) {
-    	int size = getNumberOfCategories(memberId);
-	    return size > 1 ? 20 + (size - 1) * 5 : 20;
-    }
-
     public boolean removeMemberFromCategory(int memberId, int categoryId) {
         Connection conn = DBConnection.getConnection();
         if (conn == null) {

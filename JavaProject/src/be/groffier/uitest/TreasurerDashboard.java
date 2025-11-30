@@ -63,13 +63,7 @@ public class TreasurerDashboard extends JFrame {
         lblWelcome.setBounds(20, 75, 860, 30);
         contentPane.add(lblWelcome);
         
-        JLabel lblQuickNote = new JLabel("Accès complet aux fonctionnalités financières");
-        lblQuickNote.setFont(new Font("Tahoma", Font.ITALIC, 12));
-        lblQuickNote.setForeground(Color.GRAY);
-        lblQuickNote.setBounds(20, 115, 400, 25);
-        contentPane.add(lblQuickNote);
-        
-        JButton btnManageMembers = new JButton("Gérer les membres");
+        JButton btnManageMembers = new JButton("Gérer les abonnements");
         btnManageMembers.setFont(new Font("Tahoma", Font.PLAIN, 12));
         btnManageMembers.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

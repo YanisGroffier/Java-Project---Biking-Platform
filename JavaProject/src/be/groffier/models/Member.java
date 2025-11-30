@@ -1,6 +1,7 @@
 package be.groffier.models;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Member extends Person{
@@ -11,8 +12,9 @@ public class Member extends Person{
 	private List<Bike> bikes;
 	private Vehicle ownedVehicle;
 	private List<Vehicle> vehicles;
+	private Date lastPaymentDate;
 
-	public Member(String name, String firstname, String tel,String password, double balance, 
+	public Member(String name, String firstname, String tel,String password, double balance, Date lastPaymentDate,
 				  Vehicle ownedVehicle, Category category, Bike bike){
 			super(name, firstname, tel, password);
 			setBalance(balance);
@@ -24,6 +26,7 @@ public class Member extends Person{
 			addBike(bike);
 			setOwnedVehicle(ownedVehicle);
 			setVehicles(new ArrayList<Vehicle>());
+			setLastPaymentDate(lastPaymentDate);
 	}
 	
 	public double getBalance() {return balance; }
@@ -43,6 +46,9 @@ public class Member extends Person{
 	
 	public List<Vehicle> getVehicles() {return vehicles; }
 	public void setVehicles(List<Vehicle> value) {vehicles = value; }
+	
+	public Date getLastPaymentDate() {return lastPaymentDate; }
+	public void setLastPaymentDate(Date value) { lastPaymentDate = value; }
 	
 	public boolean addCategory(Category c) {
 		if (categories.contains(c)) {return false;}

@@ -10,6 +10,8 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 import be.groffier.models.Member;
 import be.groffier.dao.CategoryMemberDAO;
@@ -321,8 +323,8 @@ public class MemberDashboard extends JFrame {
     }
     
 	private void handleFeePayment() {
-		CategoryMemberDAO categoryMemberDAO = new CategoryMemberDAO();
-	    double subscriptionFee = categoryMemberDAO.getFeeAmount(member.getId());
+		PersonDAO personDAO = new PersonDAO();
+	    double subscriptionFee = personDAO.getFeeAmount(member.getId());
 	    String message;
 	    
 	    if (subscriptionFee == 20) {
@@ -341,19 +343,21 @@ public class MemberDashboard extends JFrame {
 	    
 	    if (confirm == JOptionPane.YES_OPTION) {
 	        if (member.getBalance() >= subscriptionFee) {
-	            PersonDAO personDAO = new PersonDAO();
 	            boolean success = personDAO.payFee(member.getId(), subscriptionFee);
 	            
 	            if (success) {
 	                member.setBalance(member.getBalance() - subscriptionFee);
 	                
-	                JOptionPane.showMessageDialog(this, 
+	                LocalDate dateExpiration = LocalDate.now().plusYears(1);
+	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+	                JOptionPane.showMessageDialog(this,
 	                    "Paiement des cotisations effectué avec succès.\n" +
+	                    "Abonnement valide jusqu'au " + dateExpiration.format(formatter) + "\n" +
 	                    "Montant payé : " + String.format("%.2f €", subscriptionFee) + "\n" +
-	                    "Nouveau solde : " + String.format("%.2f €", member.getBalance()), 
-	                    "Succès", 
-	                    JOptionPane.INFORMATION_MESSAGE);
-	                
+	                    "Nouveau solde : " + String.format("%.2f €", member.getBalance()),
+	                    "Succès",
+	                    JOptionPane.INFORMATION_MESSAGE);	                
 	                refreshDashboard();
 	            } else {
 	                JOptionPane.showMessageDialog(this, 
